@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play — Queena Zheng</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* -------- BACK BUTTON -------- */
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: var(--s5);
+        transition: color 280ms ease, gap 280ms var(--ease-smooth);
+      }
+
+      .back-link:hover {
+        color: var(--text);
+        gap: 12px;
+      }
+
+      .back-link::before {
+        content: "←";
+        transition: transform 280ms var(--ease-smooth);
+      }
+
+      .back-link:hover::before {
+        transform: translateX(-4px);
+      }
+
+      /* -------- GALLERY GRID -------- */
+      .gallery-hero {
+        padding-top: 110px;
+        padding-bottom: 64px;
+      }
+
+      .gallery-hero .eyebrow {
+        margin-bottom: var(--s3);
+      }
+
+      .gallery-filter {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: var(--s4);
+      }
+
+      .filter-btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.36);
+        border: 1px solid rgba(255, 255, 255, 0.52);
+        cursor: pointer;
+        transition: all 280ms ease;
+        text-decoration: none;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.62);
+        border-color: rgba(255, 255, 255, 0.78);
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--s4);
+        padding-bottom: var(--s7);
+      }
+
+      .gallery-card {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* 所有卡片统一 4:3 比例，图片 cover 填充 */
+      .gallery-media {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        border-radius: 0;
+        background:
+          linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.08)),
+          radial-gradient(circle at 20% 20%, rgba(92, 124, 255, 0.18), transparent 36%),
+          radial-gradient(circle at 80% 75%, rgba(47, 207, 136, 0.12), transparent 34%);
+      }
+
+      .gallery-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 520ms var(--ease-smooth), opacity 420ms ease;
+      }
+
+      .gallery-card:hover .gallery-media img {
+        transform: scale(1.05);
+      }
+
+      /* 底部渐变遮罩，融入卡片内容区 */
+      .gallery-media::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(255, 255, 255, 0.06) 50%,
+          rgba(255, 255, 255, 0.38) 80%,
+          rgba(255, 255, 255, 0.60) 100%
+        );
+        pointer-events: none;
+      }
+
+      .gallery-media.media-fluidcare::after {
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(13, 13, 24, 0.10) 50%,
+          rgba(13, 13, 24, 0.55) 80%,
+          rgba(13, 13, 24, 0.82) 100%
+        );
+      }
+
+      .gallery-media.media-pink {
+        background:
+          linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.08)),
+          radial-gradient(circle at 25% 25%, rgba(255, 181, 219, 0.22), transparent 38%),
+          radial-gradient(circle at 75% 70%, rgba(92, 124, 255, 0.12), transparent 34%);
+      }
+
+      .gallery-media.media-green {
+        background:
+          linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.08)),
+          radial-gradient(circle at 30% 20%, rgba(47, 207, 136, 0.22), transparent 38%),
+          radial-gradient(circle at 70% 75%, rgba(255, 181, 219, 0.12), transparent 34%);
+      }
+
+      .gallery-media.media-blue {
+        background:
+          linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.08)),
+          radial-gradient(circle at 20% 30%, rgba(92, 124, 255, 0.22), transparent 38%),
+          radial-gradient(circle at 80% 70%, rgba(255, 181, 219, 0.10), transparent 34%);
+      }
+
+      .gallery-media.media-warm {
+        background:
+          linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.08)),
+          radial-gradient(circle at 20% 20%, rgba(255, 181, 219, 0.18), transparent 36%),
+          radial-gradient(circle at 75% 70%, rgba(47, 207, 136, 0.10), transparent 34%);
+      }
+
+      .gallery-media.media-fluidcare {
+        background: #0d0d18;
+      }
+
+      .gallery-media.media-sparrow {
+        background: #f4f6fb;
+      }
+
+      .gallery-media.media-fluidcare img {
+        opacity: 0.90;
+      }
+
+      .gallery-card:hover .gallery-media.media-fluidcare img {
+        opacity: 1;
+      }
+
+
+      .gallery-body {
+        padding: 20px 24px 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+      }
+
+      .gallery-title {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+      }
+
+      .gallery-desc {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .gallery-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s3);
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      @media (max-width: 980px) {
+        .gallery-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .gallery-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .gallery-hero {
+          padding-top: 90px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="index.html">Queena Zheng</a>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a class="nav-link" href="index.html#works">Work</a>
+          <a class="nav-link" href="play.html">Play</a>
+          <a class="nav-link" href="index.html#about">About</a>
+          <a class="nav-link" href="index.html#contact">Contact</a>
+        </nav>
+
+        <a class="pill" href="index.html#contact">Get in touch</a>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <!-- HERO -->
+      <section class="section gallery-hero">
+        <a class="back-link reveal" href="index.html">Back to home</a>
+        <p class="eyebrow reveal">PLAY</p>
+        <h1 class="hero-title reveal" style="max-width: 14ch;">
+          Curiosity-driven experiments
+        </h1>
+        <p class="hero-subtitle reveal">
+          A collection of visual experiments, creative coding sketches, and small
+          prototypes — made to explore motion, interaction, and ideas that don't
+          fit neatly into a case study.
+        </p>
+
+        <div class="gallery-filter reveal">
+          <a class="filter-btn active" href="#">All</a>
+          <a class="filter-btn" href="#">Motion</a>
+          <a class="filter-btn" href="#">Visual</a>
+          <a class="filter-btn" href="#">Interaction</a>
+          <a class="filter-btn" href="#">Code</a>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="section" style="padding-top: 0;">
+        <div class="gallery-grid reveal">
+
+          <article class="gallery-card glass-card tall">
+            <div class="gallery-media media-fluidcare">
+              <img src="fluidcare.png" alt="FluidCare — generative fluid dynamics visualization" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Generative Art</span>
+                <span class="tag">CV</span>
+                <span class="tag">Web</span>
+              </div>
+              <h3 class="gallery-title">FluidCare™</h3>
+              <p class="gallery-desc">
+                An immersive web-based rehabilitation platform bridging generative art and
+                neuromuscular physical therapy. Real-time computer vision and fluid dynamics
+                transform corrective exercises into a mesmerizing sensory experience —
+                replacing the cold clinical atmosphere with "Scientific Beauty."
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="https://zz11022-create.github.io/100days_of_making/FluidCare/" target="_blank">View live →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card glass-card">
+            <div class="gallery-media media-sparrow">
+              <img src="sparrow.png" alt="House Sparrow Urbanism — ecological simulation" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Installation</span>
+                <span class="tag">Simulation</span>
+                <span class="tag">Arduino</span>
+              </div>
+              <h3 class="gallery-title">House Sparrow Urbanism</h3>
+              <p class="gallery-desc">
+                An interactive ecological installation exploring the declining urban habitat
+                of the house sparrow through data-driven, participatory play. Sensor-enhanced
+                physical inputs drive a real-time computational bird simulation, turning
+                ecological data into an embodied experience.
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="#">View →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card glass-card">
+            <div class="gallery-media">
+              <img src="fish-of-fortune.png" alt="Fish of Fortune — voice-controlled fishing game" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Game</span>
+                <span class="tag">Voice</span>
+                <span class="tag">Web</span>
+              </div>
+              <h3 class="gallery-title">Fish of Fortune</h3>
+              <p class="gallery-desc">
+                Fish of Fortune is a playful, voice-controlled web game that transforms simple sound into an expressive underwater experience. Instead of using traditional controls, players guide a fishing hook through the ocean using their voice, like humming or whistling to move the hook vertically while steering horizontally with the mouse. Lower tones send the hook deeper into the sea, while higher pitches lift it toward the surface, creating a fluid and intuitive interaction between sound and motion.
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="https://zz11022-create.github.io/100days_of_making/Whistle-fishing-game/" target="_blank">View live →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card glass-card">
+            <div class="gallery-media">
+              <img src="nopaws.png" alt="NoPaws Mode — Chrome extension for cat keyboard protection" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Chrome Extension</span>
+                <span class="tag">JS</span>
+              </div>
+              <h3 class="gallery-title">NoPaws Mode</h3>
+              <p class="gallery-desc">
+                NoPaws Mode, a Chrome extension designed to prevent accidental keyboard input caused by cats stepping on laptops. In this first version, users can manually enable a protection mode that blocks keyboard activity on the current page.
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="https://github.com/zz11022-create/100days_of_making.git" target="_blank">View →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card glass-card tall">
+            <div class="gallery-media">
+              <img src="leftover.png" alt="Leftover Fortune Teller — playful food expiry mobile app" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Mobile</span>
+                <span class="tag">App</span>
+                <span class="tag">UX</span>
+              </div>
+              <h3 class="gallery-title">Leftover Fortune Teller</h3>
+              <p class="gallery-desc">
+                Leftover Fortune Teller is a playful mobile app that reimagines food management through a mix of humor, visual storytelling, and light behavioral nudging. Instead of treating food expiration as a passive reminder, the app turns your fridge into an expressive system that reacts, judges, and "predicts" your daily cooking fate.
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="https://100days-of-making.vercel.app/" target="_blank">View live →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card glass-card">
+            <div class="gallery-media">
+              <img src="paws.png" alt="Paws & Progress — interactive pet adoption web app" />
+              <div class="shine"></div>
+            </div>
+            <div class="gallery-body">
+              <div class="tag-row">
+                <span class="tag">Web App</span>
+                <span class="tag">Interaction</span>
+                <span class="tag">UX</span>
+              </div>
+              <h3 class="gallery-title">Paws & Progress</h3>
+              <p class="gallery-desc">
+                Paws & Progress is an interactive web application that transforms traditional pet adoption profiles into a playful, story-driven experience. Instead of relying on static text descriptions, the project allows users to explore their compatibility with a foster animal through a dynamic matching system and a short interactive care simulation. Users begin by adjusting lifestyle preferences, which continuously updates a matched pet profile in real time. Once a match is confirmed, they enter a six-stage interaction where each decision shapes the pet's emotional journey, visualized through a "Mood Map."
+              </p>
+              <div class="gallery-foot">
+                <a class="inline-link" href="http://64.225.8.81/final" target="_blank">View live →</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© 2026 Queena Zheng. Built with HTML + CSS.</p>
+        <div class="footer-links">
+          <a class="inline-link" href="index.html">Home</a>
+          <a class="inline-link" href="index.html#works">Work</a>
+          <a class="inline-link" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
