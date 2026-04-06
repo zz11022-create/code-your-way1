@@ -11,6 +11,12 @@
   </head>
 
   <body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash">
+      <video id="splash-video" src="logo.webm" autoplay muted playsinline></video>
+    </div>
+
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
@@ -63,6 +69,7 @@
         <article class="featured glass-card reveal">
           <div class="featured-media">
             <div class="media-block media-large">
+              <img src="10.jpg" alt="Global News" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
           </div>
@@ -73,12 +80,12 @@
               <span class="badge badge-soft">UX · Product</span>
             </div>
 
-            <h3 class="featured-title">Emotional Healing App Concept</h3>
+            <h3 class="featured-title">Global News</h3>
 
             <p class="featured-text">
-              A concept for an AI-driven emotional healing experience combining guided reflection,
-              generative visuals, and mood-aware interaction. This project explores how emotional
-              care can be translated into a calm and immersive digital system.
+              Global News is a data-driven platform designed to help users navigate fragmented
+              information landscapes by visualizing global narratives across geography, perspectives,
+              and public sentiment.
             </p>
 
             <div class="inline-links">
@@ -91,6 +98,7 @@
         <div class="card-grid reveal">
           <article class="work-card glass-card">
             <div class="media-block media-small media-a">
+              <img src="11.jpg" alt="Kindred Pathways" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
             <div class="card-content">
@@ -99,17 +107,18 @@
                 <span class="tag">API</span>
                 <span class="tag">UI</span>
               </div>
-              <h3 class="card-title">Dog Profile Generator</h3>
+              <h3 class="card-title">Kindred Pathways</h3>
               <p class="card-text">
-                A playful website that generates random dog profiles and explores layout,
-                personality, and visual hierarchy.
+                This is a concept platform designed to reimagine online sperm donation through
+                the lens of psychological safety, ethics, and human-centered design.
               </p>
-              <a class="inline-link" href="#">Live →</a>
+              <a class="inline-link" href="https://zz11022-create.github.io/100days_of_making/OSD/3.html">Live →</a>
             </div>
           </article>
 
           <article class="work-card glass-card">
             <div class="media-block media-small media-b">
+              <img src="12.jpg" alt="Aether" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
             <div class="card-content">
@@ -118,10 +127,11 @@
                 <span class="tag">Grid</span>
                 <span class="tag">Flexbox</span>
               </div>
-              <h3 class="card-title">Responsive robot Study</h3>
+              <h3 class="card-title">Aether</h3>
               <p class="card-text">
-                A funny robot prototype exploring hierarchy, reusable patterns, and 3-to-2-to-1 column
-                behavior across screen sizes.
+                This is an OSD (Organic Social Design) ecosystem that prioritizes emotional safety
+                and fluid thinking. It rejects the "instant-post" culture of traditional social media,
+                replacing it with a multi-layered incubation process.
               </p>
               <a class="inline-link" href="#">Notes →</a>
             </div>
@@ -129,6 +139,7 @@
 
           <article class="work-card glass-card">
             <div class="media-block media-small media-c">
+              <img src="13.jpg" alt="Rehousing" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
             <div class="card-content">
@@ -137,10 +148,11 @@
                 <span class="tag">Wireframe</span>
                 <span class="tag">System</span>
               </div>
-              <h3 class="card-title">Portfolio Wireframe</h3>
+              <h3 class="card-title">Rehousing</h3>
               <p class="card-text">
-                Low-fidelity wireframes to define content hierarchy and identify repeated structures
-                before coding.
+                This is a digital platform designed to simplify and democratize the process of home
+                renovation and extension by transforming complex architectural decisions into an
+                intuitive, guided experience.
               </p>
               <a class="inline-link" href="#">Process →</a>
             </div>
@@ -148,6 +160,7 @@
 
           <article class="work-card glass-card">
             <div class="media-block media-small media-d">
+              <img src="14.jpg" alt="Culina OS" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
             <div class="card-content">
@@ -156,10 +169,11 @@
                 <span class="tag">Arduino</span>
                 <span class="tag">Processing</span>
               </div>
-              <h3 class="card-title">Sparrow Urbanism Installation</h3>
+              <h3 class="card-title">Culina OS</h3>
               <p class="card-text">
-                A tangible ecological simulation system using light sensors, interaction tiles,
-                and responsive visual feedback.
+                This project explores a future-oriented food system that integrates intelligent
+                hardware, AI-assisted interaction, and personalized nutrition planning into a
+                seamless everyday experience.
               </p>
               <a class="inline-link" href="#">Read →</a>
             </div>
@@ -350,5 +364,18 @@
         </div>
       </div>
     </footer>
+    <script>
+      const splash = document.getElementById('splash');
+      const video  = document.getElementById('splash-video');
+
+      function hideSplash() {
+        splash.classList.add('splash-hide');
+        splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+      }
+
+      video.addEventListener('ended', hideSplash);
+      // fallback: if video fails to load, hide after 2.5s
+      setTimeout(hideSplash, 2500);
+    </script>
   </body>
 </html>

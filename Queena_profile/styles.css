@@ -1,3 +1,29 @@
+/* ── SPLASH SCREEN ─────────────────────────────── */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(92, 124, 255, 0.14), transparent 24%),
+    radial-gradient(circle at 85% 25%, rgba(47, 207, 136, 0.12), transparent 22%),
+    radial-gradient(circle at 55% 82%, rgba(255, 181, 219, 0.12), transparent 20%),
+    linear-gradient(180deg, #f8fbff 0%, #f2f5fb 100%);
+  transition: opacity 600ms ease;
+}
+
+#splash-video {
+  width: min(360px, 80vw);
+  height: auto;
+}
+
+#splash.splash-hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
 :root {
   --bg: #f4f7fb;
   --text: #111214;
