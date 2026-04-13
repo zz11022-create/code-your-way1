@@ -259,7 +259,7 @@
 
       <!-- HERO -->
       <section class="section gallery-hero">
-        <a class="back-link reveal" href="index.html">Back to home</a>
+        <a class="back-link reveal" href="index.html#play">Back to home</a>
         <p class="eyebrow reveal">PLAY</p>
         <h1 class="hero-title reveal" style="max-width: 14ch;">
           Curiosity-driven experiments
@@ -354,27 +354,28 @@
 
           <article class="gallery-card glass-card">
             <div class="gallery-media">
-              <img src="nopaws.png" alt="NoPaws Mode — Chrome extension for cat keyboard protection" />
+              <img src="nopaws.png" alt="Launchpad — interactive 3D website" />
               <div class="shine"></div>
             </div>
             <div class="gallery-body">
               <div class="tag-row">
-                <span class="tag">Chrome Extension</span>
-                <span class="tag">JS</span>
+                <span class="tag">3D</span>
+                <span class="tag">Web</span>
+                <span class="tag">Interaction</span>
               </div>
-              <h3 class="gallery-title">NoPaws Mode</h3>
+              <h3 class="gallery-title">Launchpad</h3>
               <p class="gallery-desc">
-                NoPaws Mode, a Chrome extension designed to prevent accidental keyboard input caused by cats stepping on laptops. In this first version, users can manually enable a protection mode that blocks keyboard activity on the current page.
+                An interactive website, including a 3D version of a launchpad, and the overall result was genuinely impressive.
               </p>
               <div class="gallery-foot">
-                <a class="inline-link" href="https://github.com/zz11022-create/100days_of_making.git" target="_blank">View →</a>
+                <a class="inline-link" href="https://www.instagram.com/p/DW5RnJjjVx8/?igsh=MThtZ2txa2NobXhwaw==" target="_blank">View →</a>
               </div>
             </div>
           </article>
 
           <article class="gallery-card glass-card tall">
             <div class="gallery-media">
-              <img src="leftover.png" alt="Leftover Fortune Teller — playful food expiry mobile app" />
+              <img src="leftover.png" alt="Signal Atlas — AI-powered storytelling interface" />
               <div class="shine"></div>
             </div>
             <div class="gallery-body">
@@ -383,12 +384,12 @@
                 <span class="tag">App</span>
                 <span class="tag">UX</span>
               </div>
-              <h3 class="gallery-title">Leftover Fortune Teller</h3>
+              <h3 class="gallery-title">Signal Atlas</h3>
               <p class="gallery-desc">
-                Leftover Fortune Teller is a playful mobile app that reimagines food management through a mix of humor, visual storytelling, and light behavioral nudging. Instead of treating food expiration as a passive reminder, the app turns your fridge into an expressive system that reacts, judges, and "predicts" your daily cooking fate.
+                This project is an experimental AI-powered storytelling interface built with p5.js and Gemini. Users begin by entering a short sentence, and the system responds by generating both a new narrative fragment and a corresponding terminal-style visual scene.
               </p>
               <div class="gallery-foot">
-                <a class="inline-link" href="https://100days-of-making.vercel.app/" target="_blank">View live →</a>
+                <a class="inline-link" href="https://editor.p5js.org/ZhaoquanZheng/full/EA4lqn6F4" target="_blank">View live →</a>
               </div>
             </div>
           </article>
@@ -429,5 +430,75 @@
         </div>
       </div>
     </footer>
+
+    <div id="cursor" class="custom-cursor" aria-hidden="true"></div>
+
+    <script>
+      /* ── Custom cursor ── */
+      (function () {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+
+        var cursor = document.getElementById('cursor');
+        var rafId  = null;
+        var mx = 0, my = 0;
+
+        var bodyFixed = false;
+        function detectContainingBlock() {
+          var t = window.getComputedStyle(document.body).transform;
+          bodyFixed = (t !== 'none' && t !== 'matrix(1, 0, 0, 1, 0, 0)');
+        }
+        detectContainingBlock();
+        new MutationObserver(detectContainingBlock).observe(document.body, {
+          attributes: true, attributeFilter: ['style', 'class']
+        });
+
+        function paint() {
+          var sx = bodyFixed ? (window.pageXOffset || 0) : 0;
+          var sy = bodyFixed ? (window.pageYOffset || 0) : 0;
+          cursor.style.transform =
+            'translate(calc(' + (mx + sx) + 'px - 50%), calc(' + (my + sy) + 'px - 50%))';
+          rafId = null;
+        }
+
+        document.addEventListener('mousemove', function (e) {
+          mx = e.clientX; my = e.clientY;
+          if (rafId) return;
+          rafId = requestAnimationFrame(paint);
+        });
+
+        document.addEventListener('scroll', function () {
+          if (rafId) return;
+          rafId = requestAnimationFrame(paint);
+        }, { passive: true });
+
+        var c = { text: 0, card: 0, link: 0 };
+
+        function refresh() {
+          cursor.classList.toggle('is-link', c.link > 0);
+          cursor.classList.toggle('is-card', c.card > 0 && c.link === 0);
+          cursor.classList.toggle('is-text', c.text > 0 && c.card === 0 && c.link === 0);
+        }
+
+        function bind(selector, type) {
+          document.querySelectorAll(selector).forEach(function (el) {
+            el.addEventListener('mouseenter', function () { c[type]++; refresh(); });
+            el.addEventListener('mouseleave', function () { c[type] = Math.max(0, c[type] - 1); refresh(); });
+          });
+        }
+
+        bind('h1, h2, h3, p, .eyebrow, .gallery-title, .gallery-desc', 'text');
+        bind('.gallery-card', 'card');
+        bind('a, button', 'link');
+      })();
+
+      /* ── Reveal on scroll ── */
+      var revealEls = document.querySelectorAll('.reveal');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      revealEls.forEach(function (el) { io.observe(el); });
+    </script>
   </body>
 </html>

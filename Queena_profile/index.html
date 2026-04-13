@@ -12,11 +12,6 @@
 
   <body>
 
-    <!-- SPLASH SCREEN -->
-    <div id="splash">
-      <video id="splash-video" src="logo.webm" autoplay muted playsinline></video>
-    </div>
-
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
@@ -32,30 +27,54 @@
           <a class="nav-link" href="#contact">Contact</a>
         </nav>
 
-        <a class="pill" href="#contact">Get in touch</a>
+        <div class="topbar-right">
+          <a class="pill" href="#contact">Get in touch</a>
+          <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+          </button>
+        </div>
       </div>
     </header>
+
+    <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+      <a class="drawer-link" href="#works">Work</a>
+      <a class="drawer-link" href="#play">Play</a>
+      <div class="drawer-divider"></div>
+      <a class="drawer-link" href="#about">About</a>
+      <a class="drawer-link" href="#contact">Contact</a>
+    </div>
 
     <main class="container">
       <!-- HERO -->
       <section id="home" class="section hero">
-        <p class="eyebrow reveal">PRODUCT DESIGNER</p>
+        <div class="hero-layout">
+          <!-- Left: text -->
+          <div class="hero-copy">
+            <p class="eyebrow reveal">PRODUCT DESIGNER</p>
 
-        <h1 class="hero-title reveal">
-          I design products built for
-          impact,
-          designed to scale.
-        </h1>
+            <h1 class="hero-title reveal">
+              I design products built for
+              impact,
+              designed to scale.
+            </h1>
 
-        <p class="hero-subtitle reveal">
-          Based in New York. I’m currently building a portfolio that brings together
-          academic projects, creative experiments, and interaction-driven storytelling.
-        </p>
+            <p class="hero-subtitle reveal">
+              Based in New York. I’m currently building a portfolio that brings together
+              academic projects, creative experiments, and interaction-driven storytelling.
+            </p>
+          </div>
 
-        <div class="hero-meta glass-pill reveal">
-          <span class="dot"></span>
-          <span>Currently building:</span>
-          <strong>Personal Portfolio + Visual System</strong>
+          <!-- Right: Runway AI Character -->
+          <div class="hero-character reveal">
+            <div class="character-preview">
+              <div class="character-avatar">
+                <img src="character.jpg" alt="Queena AI Character" class="character-photo" />
+              </div>
+              <p class="character-label">Queena · AI Character</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -69,7 +88,7 @@
         <article class="featured glass-card reveal">
           <div class="featured-media">
             <div class="media-block media-large">
-              <img src="10.jpg" alt="Global News" style="width:100%; height:100%; object-fit:cover; display:block;" />
+              <img src="10.jpg" alt="Soleluxe" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
           </div>
@@ -80,16 +99,16 @@
               <span class="badge badge-soft">UX · Product</span>
             </div>
 
-            <h3 class="featured-title">Global News</h3>
+            <h3 class="featured-title">Soleluxe</h3>
 
             <p class="featured-text">
-              Global News is a data-driven platform designed to help users navigate fragmented
-              information landscapes by visualizing global narratives across geography, perspectives,
-              and public sentiment.
+              As Soleluxe scales, it needs more than just a store. Our inspiration was to transform
+              the shopping journey into an interactive playground, shifting the focus from passive
+              browsing to active creation.
             </p>
 
             <div class="inline-links">
-              <a class="inline-link" href="#">View case study →</a>
+              <a class="inline-link" href="https://yz12074-ui.github.io/Dynamic-web-development/hackathon/">View →</a>
               <a class="inline-link muted-link" href="#">Prototype →</a>
             </div>
           </div>
@@ -364,18 +383,188 @@
         </div>
       </div>
     </footer>
-    <script>
-      const splash = document.getElementById('splash');
-      const video  = document.getElementById('splash-video');
 
-      function hideSplash() {
-        splash.classList.add('splash-hide');
-        splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+    <div id="cursor" class="custom-cursor" aria-hidden="true"></div>
+
+    <!-- Runway AI Character Widget -->
+    <script src="https://cdn.dev.runwayml.com/prod/widget.js"
+            data-pub-key="pub_7f9efaedb1ac8b02d76a79c58dd32aefa2b75c6a3a46d8780faeede6d4dd306e"></script>
+
+    <script>
+      /* ── Custom cursor ── */
+      (function () {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+
+        var cursor = document.getElementById('cursor');
+        var rafId  = null;
+        var mx = 0, my = 0;
+
+        /* When a CSS transform is applied to <body> (e.g. by an animation or
+           third-party script), position:fixed children use body as their
+           containing block instead of the viewport. In that case clientX/clientY
+           (viewport coords) need to be offset by the current scroll position so
+           the cursor lands on the actual mouse position.
+           We detect this once at load and re-detect if body's style/class changes. */
+        var bodyFixed = false;
+        function detectContainingBlock() {
+          var t = window.getComputedStyle(document.body).transform;
+          bodyFixed = (t !== 'none' && t !== 'matrix(1, 0, 0, 1, 0, 0)');
+        }
+        detectContainingBlock();
+        new MutationObserver(detectContainingBlock).observe(document.body, {
+          attributes: true, attributeFilter: ['style', 'class']
+        });
+
+        function paint() {
+          var sx = bodyFixed ? (window.pageXOffset || 0) : 0;
+          var sy = bodyFixed ? (window.pageYOffset || 0) : 0;
+          cursor.style.transform =
+            'translate(calc(' + (mx + sx) + 'px - 50%), calc(' + (my + sy) + 'px - 50%))';
+          rafId = null;
+        }
+
+        document.addEventListener('mousemove', function (e) {
+          mx = e.clientX; my = e.clientY;
+          if (rafId) return;
+          rafId = requestAnimationFrame(paint);
+        });
+
+        /* Re-paint on scroll: if body is the containing block the cursor drifts
+           upward as the page scrolls; repaint keeps it pinned to the last
+           known mouse position. */
+        document.addEventListener('scroll', function () {
+          if (rafId) return;
+          rafId = requestAnimationFrame(paint);
+        }, { passive: true });
+
+        /* Count-based state — handles nested elements correctly */
+        var c = { text: 0, card: 0, link: 0 };
+
+        function refresh() {
+          /* Priority: link > card > text */
+          cursor.classList.toggle('is-link', c.link > 0);
+          cursor.classList.toggle('is-card', c.card > 0 && c.link === 0);
+          cursor.classList.toggle('is-text', c.text > 0 && c.card === 0 && c.link === 0);
+        }
+
+        function bind(selector, type) {
+          document.querySelectorAll(selector).forEach(function (el) {
+            el.addEventListener('mouseenter', function () { c[type]++; refresh(); });
+            el.addEventListener('mouseleave', function () { c[type] = Math.max(0, c[type] - 1); refresh(); });
+          });
+        }
+
+        bind('h1, h2, h3, p, .eyebrow, .section-meta, .card-title, .featured-title, .skill-line', 'text');
+        bind('.work-card, .featured, .play-panel, .photo-card, .character-avatar', 'card');
+        bind('a, button', 'link');
+      })();
+
+      /* ── Mount Runway widget inside hero card ── */
+      function mountWidget() {
+        var host = document.querySelector('#runway-embed-widget');
+        var avatar = document.querySelector('.character-avatar');
+        if (!host || !avatar) { setTimeout(mountWidget, 300); return; }
+        avatar.appendChild(host);
+      }
+      mountWidget();
+
+      /* ── Reveal on scroll ── */
+      var revealEls = document.querySelectorAll('.reveal');
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      revealEls.forEach(function(el) { io.observe(el); });
+
+      /* ── Burger menu ── */
+      var burgerBtn = document.getElementById('burger-btn');
+      var navDrawer = document.getElementById('nav-drawer');
+
+      function toggleMenu(open) {
+        burgerBtn.classList.toggle('is-open', open);
+        navDrawer.classList.toggle('is-open', open);
+        burgerBtn.setAttribute('aria-expanded', String(open));
+        navDrawer.setAttribute('aria-hidden', String(!open));
       }
 
-      video.addEventListener('ended', hideSplash);
-      // fallback: if video fails to load, hide after 2.5s
-      setTimeout(hideSplash, 2500);
+      burgerBtn.addEventListener('click', function() {
+        toggleMenu(!navDrawer.classList.contains('is-open'));
+      });
+
+      /* close on drawer link click */
+      navDrawer.querySelectorAll('.drawer-link').forEach(function(link) {
+        link.addEventListener('click', function() { toggleMenu(false); });
+      });
+
+      /* close on outside click */
+      document.addEventListener('click', function(e) {
+        if (navDrawer.classList.contains('is-open') &&
+            !navDrawer.contains(e.target) &&
+            !burgerBtn.contains(e.target)) {
+          toggleMenu(false);
+        }
+      });
+
+      /* ── Play panel — mouse-follow glow (RAF-throttled) ── */
+      var playPanel = document.querySelector('.play-panel');
+      if (playPanel) {
+        var playRaf = null;
+        playPanel.addEventListener('mousemove', function(e) {
+          if (playRaf) return;
+          playRaf = requestAnimationFrame(function() {
+            var r = playPanel.getBoundingClientRect();
+            playPanel.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
+            playPanel.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+            playRaf = null;
+          });
+        });
+      }
+
+      /* ── Smooth <details> expand / collapse ── */
+      document.querySelectorAll('.detail-item').forEach(function(detail) {
+        var summary = detail.querySelector('summary');
+        var body    = detail.querySelector('.detail-body');
+        var mark    = detail.querySelector('.summary-mark');
+
+        summary.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          if (detail.open) {
+            /* — collapse — */
+            body.style.height  = body.scrollHeight + 'px';
+            body.style.opacity = '1';
+            body.style.overflow = 'hidden';
+            body.offsetHeight; /* force reflow */
+            body.style.transition = 'height 320ms cubic-bezier(0.22,1,0.36,1), opacity 200ms ease';
+            body.style.height  = '0px';
+            body.style.opacity = '0';
+            body.addEventListener('transitionend', function done() {
+              detail.removeAttribute('open');
+              body.style.cssText = '';
+              body.removeEventListener('transitionend', done);
+            });
+            if (mark) mark.textContent = '+';
+          } else {
+            /* — expand — */
+            detail.setAttribute('open', '');
+            var h = body.scrollHeight;
+            body.style.height   = '0px';
+            body.style.opacity  = '0';
+            body.style.overflow = 'hidden';
+            body.offsetHeight;
+            body.style.transition = 'height 320ms cubic-bezier(0.22,1,0.36,1), opacity 240ms ease 60ms';
+            body.style.height  = h + 'px';
+            body.style.opacity = '1';
+            body.addEventListener('transitionend', function done() {
+              body.style.height   = '';
+              body.style.overflow = '';
+              body.removeEventListener('transitionend', done);
+            });
+            if (mark) mark.textContent = '−';
+          }
+        });
+      });
     </script>
   </body>
 </html>
