@@ -21,14 +21,12 @@
         <a class="brand" href="#home">Queena Zheng</a>
 
         <nav class="nav" aria-label="Main navigation">
-          <a class="nav-link" href="#works">Work</a>
-          <a class="nav-link" href="#play">Play</a>
-          <a class="nav-link" href="#about">About</a>
-          <a class="nav-link" href="#contact">Contact</a>
+          <a class="nav-link is-active" href="#home">Hire Me</a>
+          <a class="nav-link" href="play-mode.html">Play</a>
+          <a class="nav-link" href="explore-mode.html">Explore</a>
         </nav>
 
         <div class="topbar-right">
-          <a class="pill" href="#contact">Get in touch</a>
           <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
             <span class="burger-line"></span>
             <span class="burger-line"></span>
@@ -39,11 +37,9 @@
     </header>
 
     <div class="nav-drawer" id="nav-drawer" aria-hidden="true">
-      <a class="drawer-link" href="#works">Work</a>
-      <a class="drawer-link" href="#play">Play</a>
-      <div class="drawer-divider"></div>
-      <a class="drawer-link" href="#about">About</a>
-      <a class="drawer-link" href="#contact">Contact</a>
+      <a class="drawer-link" href="#home">Hire Me</a>
+      <a class="drawer-link" href="play-mode.html">Play</a>
+      <a class="drawer-link" href="explore-mode.html">Explore</a>
     </div>
 
     <main class="container">
@@ -179,7 +175,7 @@
 
           <article class="work-card glass-card">
             <div class="media-block media-small media-d">
-              <img src="14.jpg" alt="Culina OS" style="width:100%; height:100%; object-fit:cover; display:block;" />
+              <img src="Loop.jpg" alt="Material Loop" style="width:100%; height:100%; object-fit:cover; display:block;" />
               <div class="shine"></div>
             </div>
             <div class="card-content">
@@ -188,41 +184,19 @@
                 <span class="tag">Arduino</span>
                 <span class="tag">Processing</span>
               </div>
-              <h3 class="card-title">Culina OS</h3>
+              <h3 class="card-title">Material Loop</h3>
               <p class="card-text">
-                This project explores a future-oriented food system that integrates intelligent
-                hardware, AI-assisted interaction, and personalized nutrition planning into a
-                seamless everyday experience.
+                Material Loop is an integrated product architecture platform designed to decarbonize
+                the construction industry. Utilizing a proprietary Construction Schedule Alignment
+                algorithm, the platform matches "Futures" (materials pending dismantling) and "Spot
+                Stock" (surplus inventory) with the precise procurement windows of developers.
               </p>
-              <a class="inline-link" href="#">Read →</a>
+              <a class="inline-link" href="https://milesqueena.github.io/Material_Loop/">View →</a>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- PLAY -->
-      <section id="play" class="section">
-        <div class="play-panel glass-card reveal">
-          <div class="play-copy">
-            <p class="eyebrow">PLAY</p>
-            <h2 class="section-title-large">Curiosity-driven experiments</h2>
-            <p class="card-text play-text">
-              I like mixing visual experiments, creative coding, and small prototypes.
-              I’m especially interested in how subtle motion and interaction can support
-              storytelling without overwhelming the user.
-            </p>
-            <a class="pill pill-secondary" href="play.html">Explore →</a>
-          </div>
-
-          <div class="play-media">
-            <div class="media-block media-play" style="background:#0d0d18; overflow:hidden; min-height:unset;">
-              <img src="fluidcare.png" alt="FluidCare generative visualization"
-                   style="width:100%; height:auto; display:block; opacity:0.9; transition:opacity 420ms ease, transform 420ms var(--ease-smooth);" />
-              <div class="shine"></div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- ABOUT -->
       <section id="about" class="section">
@@ -303,47 +277,6 @@
         </div>
       </section>
 
-      <!-- PHOTO GRID -->
-      <section class="section">
-        <div class="section-head reveal">
-          <h2 class="section-title">Aside from design, I love…</h2>
-          <span class="section-meta">travel · photos · daily life</span>
-        </div>
-
-        <div class="photo-grid reveal">
-          <article class="photo-card glass-card">
-            <div class="media-block photo-media photo-1">
-              <img src="photo1.jpg" alt="A calm moment outdoors"  />
-              <div class="shine"></div>
-            </div>
-            <p class="photo-caption">A calm moment outdoors</p>
-          </article>
-
-          <article class="photo-card glass-card">
-            <div class="media-block photo-media photo-2">
-              <img src="photo2.jpg" alt="Studio day"  />
-              <div class="shine"></div>
-            </div>
-            <p class="photo-caption">Studio day</p>
-          </article>
-
-          <article class="photo-card glass-card">
-            <div class="media-block photo-media photo-3">
-              <img src="photo3.jpg" alt="City walk"  />
-              <div class="shine"></div>
-            </div>
-            <p class="photo-caption">City walk</p>
-          </article>
-
-          <article class="photo-card glass-card">
-            <div class="media-block photo-media photo-4">
-              <img src="photo4.jpg" alt="Weekend energy"  />
-              <div class="shine"></div>
-            </div>
-            <p class="photo-caption">Weekend energy</p>
-          </article>
-        </div>
-      </section>
 
       <!-- CTA -->
       <section id="contact" class="section">
@@ -385,6 +318,7 @@
     </footer>
 
     <div id="cursor" class="custom-cursor" aria-hidden="true"></div>
+
 
     <!-- Runway AI Character Widget -->
     <script src="https://cdn.dev.runwayml.com/prod/widget.js"

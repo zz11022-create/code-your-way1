@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queena Zheng — Play</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #DCD6FF;
+            color: #111;
+            overflow-x: hidden;
+        }
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 2px #111;
+        }
+        .polaroid-shadow {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-left: 1px solid #000; }
+        ::-webkit-scrollbar-thumb { background: #111; }
+        .line-art {
+            border: 1.5px solid #111;
+            background-color: #fff;
+        }
+        .diorama-floor {
+            border-bottom: 4px solid #111;
+        }
+        .reveal-pop {
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        .group:hover .reveal-pop {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-yellow-300 selection:text-black">
+    <div class="noise-bg"></div>
+
+    <!-- HEADER -->
+    <header class="w-full border-b border-black px-6 py-4 flex justify-between items-start md:items-center backdrop-blur-sm fixed top-0 z-50" style="background:rgba(220,214,255,0.92);">
+        <div class="flex flex-col text-[10px] font-mono leading-tight tracking-tight uppercase">
+            <span class="flex items-center gap-1">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-[spin_10s_linear_infinite]"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v20M2 12h20"></path></svg>
+                Queena Zheng
+            </span>
+            <span class="text-gray-500">Product Designer</span>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-2 text-[11px] font-mono uppercase tracking-wide">
+            <a href="index.html#home" class="px-5 py-2 rounded-full border border-black hover:bg-black hover:text-white transition-colors">Hire Me</a>
+            <a href="#" class="px-5 py-2 rounded-full border border-black bg-black text-white">Play</a>
+            <a href="explore-mode.html" class="px-5 py-2 rounded-full border border-black hover:bg-black hover:text-white transition-colors">Explore</a>
+        </nav>
+
+        <div class="flex flex-col text-right text-[10px] font-mono leading-tight tracking-tight uppercase">
+            <span>Available for Work</span>
+            <span class="text-gray-500">New York, NY</span>
+        </div>
+    </header>
+
+    <div class="h-[72px]"></div>
+
+    <!-- HERO: overlapping polaroids -->
+    <section class="relative w-full min-h-[90vh] flex items-center justify-center overflow-hidden border-b border-black bg-[#fcfcfc]">
+
+        <!-- Large background typography -->
+        <div class="absolute inset-0 flex flex-col justify-center items-center select-none overflow-hidden pt-12">
+            <div class="flex justify-between w-full px-4 -mb-[5vw]">
+                <span class="text-[22vw] font-black leading-none tracking-tighter">QUE</span>
+                <span class="text-[22vw] font-black leading-none tracking-tighter">ENA</span>
+            </div>
+            <div class="flex justify-between w-full px-4 text-outline z-0">
+                <span class="text-[22vw] font-black leading-none tracking-tighter">ZH</span>
+                <span class="text-[22vw] font-black leading-none tracking-tighter">ENG</span>
+            </div>
+        </div>
+
+        <!-- Corner labels -->
+        <div class="absolute top-6 left-6 text-[9px] font-mono uppercase leading-tight">
+            [01] Creative Space<br>Portfolio MMXXIV
+        </div>
+        <div class="absolute top-6 right-6 text-[9px] font-mono uppercase leading-tight text-right">
+            Play — Issue 01<br>New York / 2024—2026
+        </div>
+
+        <!-- Polaroid cluster -->
+        <div id="polaroid-container" class="relative z-10 w-full max-w-4xl h-[600px] flex items-center justify-center pointer-events-none mt-12">
+
+            <!-- Left polaroid -->
+            <div class="polaroid-card absolute group pointer-events-auto transition-transform duration-500 hover:z-50" data-rot="-12" style="transform: rotate(-12deg) translateX(-200px) translateY(-40px);">
+                <div class="bg-white p-3 pb-16 polaroid-shadow border border-gray-200 w-[280px] rounded-sm transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-0">
+                    <div class="w-full h-[320px] bg-gray-200 overflow-hidden relative">
+                        <img src="photo1.jpg" alt="A calm moment outdoors" class="w-full h-full object-cover filter grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-blue-500/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-[10px] font-mono uppercase text-gray-500">FIG. 01 / Outdoor</div>
+                </div>
+            </div>
+
+            <!-- Right polaroid -->
+            <div class="polaroid-card absolute group pointer-events-auto transition-transform duration-500 hover:z-50" data-rot="8" style="transform: rotate(8deg) translateX(220px) translateY(20px);">
+                <div class="bg-white p-3 pb-16 polaroid-shadow border border-gray-200 w-[260px] rounded-sm transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-0">
+                    <div class="w-full h-[300px] bg-gray-200 overflow-hidden relative">
+                        <img src="photo2.jpg" alt="Studio day" class="w-full h-full object-cover filter grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-yellow-500/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-[10px] font-mono uppercase text-gray-500">FIG. 02 / Studio</div>
+                </div>
+            </div>
+
+            <!-- Center (main) polaroid -->
+            <div class="polaroid-card absolute z-40 group pointer-events-auto transition-transform duration-500 hover:z-50" data-rot="-3" style="transform: rotate(-3deg) translateY(60px);">
+                <div class="bg-white p-3 pb-16 polaroid-shadow border border-gray-200 w-[300px] rounded-sm transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-4">
+
+                    <!-- Explore badge -->
+                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-white rounded-full border border-black flex items-center justify-center z-20 shadow-lg transform group-hover:rotate-12 transition-transform duration-500">
+                        <div class="text-[9px] font-mono uppercase text-center leading-tight">
+                            Explore<br>Index
+                        </div>
+                    </div>
+
+                    <!-- Pin -->
+                    <div class="absolute top-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+
+                    <div class="w-full h-[360px] bg-gray-200 overflow-hidden relative mt-2">
+                        <img src="character.jpg" alt="Queena · AI Character" class="w-full h-full object-cover filter grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                    <div class="absolute bottom-4 flex justify-between w-[calc(100%-24px)] text-[10px] font-mono uppercase text-gray-900 border-t border-gray-100 pt-2">
+                        <span>Queena · AI</span>
+                        <span class="text-blue-600 font-bold opacity-0 group-hover:opacity-100 transition-opacity">[View]</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MY ROOM diorama -->
+    <section class="w-full border-b border-black bg-white relative">
+        <div class="p-6 border-b border-black flex justify-between items-center">
+            <h2 class="text-xs font-mono uppercase">My Room</h2>
+            <div class="text-[10px] font-mono text-gray-400 uppercase hidden sm:block">Interactive Diorama Space / Hover to reveal</div>
+        </div>
+
+        <div class="px-6 py-3 text-center text-[11px] font-mono text-gray-400 italic tracking-wide border-b border-gray-100">
+            This is my room — each corner holds a story
+        </div>
+
+        <div class="w-full h-[600px] relative overflow-hidden flex flex-col justify-end">
+
+            <div class="w-full max-w-7xl mx-auto h-[450px] relative flex items-end justify-between px-[5%] diorama-floor z-10 pb-[1.5px]">
+
+                <!-- Fridge -->
+                <div class="relative group cursor-pointer h-full flex items-end pb-0">
+                    <div class="w-28 h-[280px] line-art flex flex-col relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_0_0_#111]">
+                        <div class="h-24 w-full border-b-[1.5px] border-black relative bg-white group-hover:bg-blue-50 transition-colors">
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-8 border-[1.5px] border-black rounded-full"></div>
+                        </div>
+                        <div class="flex-grow w-full relative bg-white group-hover:bg-blue-50/50 transition-colors">
+                            <div class="absolute right-2 top-8 w-1.5 h-16 border-[1.5px] border-black rounded-full"></div>
+                            <div class="absolute top-4 left-4 w-4 h-5 bg-yellow-300 border border-black rotate-[-10deg] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                            <div class="absolute top-12 left-6 w-3 h-3 bg-red-400 rounded-full border border-black opacity-0 group-hover:opacity-100 transition-all duration-300 delay-75"></div>
+                            <div class="absolute top-20 left-3 w-5 h-5 bg-green-400 border border-black rotate-[15deg] opacity-0 group-hover:opacity-100 transition-all duration-300 delay-150"></div>
+                        </div>
+                    </div>
+                    <div class="reveal-pop absolute -top-32 left-1/2 -translate-x-1/2 w-48 bg-white p-2 border border-black shadow-xl z-50">
+                        <img src="life.jpg" class="w-full h-32 object-cover mb-2 border border-gray-200">
+                        <div class="text-[9px] font-mono uppercase text-center text-blue-600 font-bold">Food is my passion — cooking is my way of life</div>
+                    </div>
+                </div>
+
+                <!-- Wardrobe -->
+                <div class="relative group cursor-pointer h-full flex items-end">
+                    <div class="w-36 h-[340px] line-art flex relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_0_0_#111] overflow-hidden">
+                        <div class="w-1/2 h-full border-r-[1.5px] border-black relative bg-white group-hover:-translate-x-full transition-transform duration-500 ease-in-out z-20">
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-12 border-[1.5px] border-black rounded-full"></div>
+                        </div>
+                        <div class="w-1/2 h-full relative bg-white group-hover:translate-x-full transition-transform duration-500 ease-in-out z-20">
+                            <div class="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-12 border-[1.5px] border-black rounded-full"></div>
+                        </div>
+                        <div class="absolute inset-0 bg-pink-50 flex flex-col items-center pt-8 z-10 border-[1.5px] border-black">
+                            <div class="w-full border-b-[1.5px] border-black mb-4"></div>
+                            <div class="flex gap-2 px-2">
+                                <div class="w-4 h-24 bg-yellow-400 border border-black rounded-t-sm"></div>
+                                <div class="w-4 h-32 bg-blue-500 border border-black rounded-t-sm"></div>
+                                <div class="w-4 h-20 bg-green-400 border border-black rounded-t-sm"></div>
+                                <div class="w-4 h-28 bg-purple-400 border border-black rounded-t-sm"></div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 w-12 h-8 bg-orange-300 border border-black"></div>
+                        </div>
+                    </div>
+                    <div class="reveal-pop absolute -top-40 left-1/2 -translate-x-1/2 w-40 bg-white p-2 border border-black shadow-xl z-50 rotate-3">
+                        <img src="life1.jpg" class="w-full h-40 object-cover mb-2 border border-gray-200">
+                        <div class="text-[9px] font-mono uppercase text-center text-pink-600 font-bold">Beyond work, I'm a different shade of myself</div>
+                    </div>
+                </div>
+
+                <!-- Desk + computer -->
+                <div class="relative group cursor-pointer h-full flex items-end justify-center w-64">
+                    <!-- Lamp -->
+                    <div class="absolute top-12 left-4 w-12 h-16 line-art flex items-center justify-center group-hover:bg-yellow-200 transition-colors duration-300 rotate-[-2deg]">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:stroke-black stroke-gray-400"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                    </div>
+                    <div class="absolute top-20 right-8 w-16 h-12 line-art flex items-center justify-center font-bold text-xl group-hover:bg-blue-200 group-hover:text-blue-900 transition-colors duration-300 rotate-[3deg]">
+                        5
+                    </div>
+                    <!-- Pendant light -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                        <div class="w-0.5 h-20 bg-black"></div>
+                        <div class="w-10 h-6 border-[1.5px] border-black bg-white rounded-t-full group-hover:bg-yellow-100 transition-colors"></div>
+                        <div class="w-32 h-40 bg-gradient-to-b from-yellow-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none mt-1"></div>
+                    </div>
+                    <!-- Desk -->
+                    <div class="w-full h-[140px] relative z-20">
+                        <div class="absolute top-0 w-full h-2 bg-white border-[1.5px] border-black group-hover:bg-gray-100"></div>
+                        <div class="absolute top-2 left-4 w-2 h-[132px] bg-white border-x-[1.5px] border-black"></div>
+                        <div class="absolute top-2 right-4 w-2 h-[132px] bg-white border-x-[1.5px] border-black"></div>
+                        <!-- Monitor -->
+                        <div class="absolute -top-[52px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+                            <div class="w-20 h-12 border-[1.5px] border-black bg-white rounded-sm relative overflow-hidden group-hover:border-blue-500 transition-colors">
+                                <div class="absolute inset-1 bg-gray-100 group-hover:bg-blue-400 transition-colors flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100"></div>
+                                </div>
+                            </div>
+                            <div class="w-2 h-4 border-x-[1.5px] border-black bg-white"></div>
+                            <div class="w-8 h-1 border-[1.5px] border-black bg-white rounded-t-sm"></div>
+                        </div>
+                        <!-- Speakers -->
+                        <div class="absolute -top-8 left-12 w-4 h-8 border-[1.5px] border-black bg-white flex flex-col items-center justify-evenly group-hover:bg-gray-800 transition-colors">
+                            <div class="w-1.5 h-1.5 rounded-full bg-black group-hover:bg-white"></div>
+                            <div class="w-2 h-2 rounded-full bg-black group-hover:bg-white"></div>
+                        </div>
+                        <div class="absolute -top-8 right-12 w-4 h-8 border-[1.5px] border-black bg-white flex flex-col items-center justify-evenly group-hover:bg-gray-800 transition-colors">
+                            <div class="w-1.5 h-1.5 rounded-full bg-black group-hover:bg-white"></div>
+                            <div class="w-2 h-2 rounded-full bg-black group-hover:bg-white"></div>
+                        </div>
+                        <!-- Chair -->
+                        <div class="absolute top-8 left-1/2 -translate-x-1/2 w-12 h-[100px] flex flex-col items-center transition-transform duration-300 group-hover:-translate-x-4">
+                            <div class="w-10 h-10 border-[1.5px] border-black bg-white rounded-t-lg group-hover:bg-orange-100"></div>
+                            <div class="w-12 h-2 border-[1.5px] border-black bg-white rounded-full mt-1 group-hover:bg-orange-200"></div>
+                            <div class="flex gap-4 mt-1 h-full w-8">
+                                <div class="w-[1.5px] h-full bg-black"></div>
+                                <div class="w-[1.5px] h-full bg-black"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal-pop absolute -top-16 right-0 w-48 bg-white p-2 border border-black shadow-xl z-50">
+                        <img src="life2.jpg" class="w-full h-24 object-cover mb-2 border border-gray-200">
+                        <div class="text-[9px] font-mono uppercase text-center text-purple-600 font-bold">Curious about emerging tech — embracing every change and the unknown</div>
+                    </div>
+                </div>
+
+                <!-- Bed -->
+                <div class="relative group cursor-pointer h-full flex items-end">
+                    <div class="w-56 h-[100px] relative transition-transform duration-300 group-hover:-translate-y-1">
+                        <div class="absolute bottom-0 w-full h-8 border-[1.5px] border-black bg-white">
+                            <div class="absolute -bottom-2 left-2 w-2 h-2 border-x-[1.5px] border-black bg-white"></div>
+                            <div class="absolute -bottom-2 right-2 w-2 h-2 border-x-[1.5px] border-black bg-white"></div>
+                        </div>
+                        <div class="absolute bottom-8 w-[98%] left-[1%] h-6 border-[1.5px] border-black bg-white rounded-t-sm group-hover:bg-gray-50"></div>
+                        <div class="absolute bottom-6 right-0 w-3/4 h-12 border-[1.5px] border-black bg-white rounded-tl-xl overflow-hidden group-hover:bg-teal-50 transition-colors">
+                            <div class="w-full h-full relative opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="absolute top-2 left-4 w-full h-1 border-b border-teal-200 rounded-[50%]"></div>
+                                <div class="absolute top-6 left-2 w-full h-1 border-b border-teal-200 rounded-[50%]"></div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-[56px] left-4 w-12 h-6 border-[1.5px] border-black bg-white rounded-full group-hover:bg-blue-100 transition-colors"></div>
+                    </div>
+                    <!-- Side table with window -->
+                    <div class="absolute bottom-[160px] left-1/2 -translate-x-1/2 w-24 h-24 border-[1.5px] border-black bg-white overflow-hidden group-hover:border-yellow-400 transition-colors">
+                        <div class="absolute inset-0 bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div class="absolute top-2 right-2 w-4 h-4 bg-yellow-300 rounded-full"></div>
+                        </div>
+                        <div class="w-full h-4 border-b-[1.5px] border-black bg-gray-100 relative z-10"></div>
+                        <div class="w-full h-1 border-b-[1.5px] border-black mt-2 relative z-10"></div>
+                        <div class="w-full h-1 border-b-[1.5px] border-black mt-2 relative z-10"></div>
+                        <div class="absolute inset-0 border-[1.5px] border-black m-1 z-10 pointer-events-none"></div>
+                        <div class="absolute top-0 bottom-0 left-1/2 w-[1.5px] bg-black z-10 pointer-events-none"></div>
+                        <div class="absolute left-0 right-0 top-1/2 h-[1.5px] bg-black z-10 pointer-events-none"></div>
+                    </div>
+                    <div class="reveal-pop absolute -top-32 right-10 w-44 bg-white p-2 border border-black shadow-xl z-50 -rotate-2">
+                        <img src="photo4.jpg" class="w-full h-28 object-cover mb-2 border border-gray-200">
+                        <div class="text-[9px] font-mono uppercase text-center text-teal-600 font-bold">I cherish my alone time — a good film is the best way to unwind</div>
+                    </div>
+                </div>
+
+                <!-- Bookshelf -->
+                <div class="relative group cursor-pointer h-full flex items-end">
+                    <div class="w-28 h-[300px] border-[1.5px] border-black bg-white p-1 relative transition-transform duration-300 group-hover:bg-red-50">
+                        <div class="w-full h-full border-[1.5px] border-black p-2 flex flex-col gap-2 bg-white">
+                            <div class="w-full h-1/3 border-[1.5px] border-black group-hover:bg-red-100 transition-colors"></div>
+                            <div class="w-full h-2/3 border-[1.5px] border-black group-hover:bg-red-100 transition-colors"></div>
+                        </div>
+                        <div class="absolute top-1/2 right-3 w-2 h-4 border-[1.5px] border-black bg-white rounded-full group-hover:bg-yellow-400"></div>
+                        <div class="absolute top-[45%] right-2 w-8 h-10 bg-black text-white flex items-center justify-center text-[5px] font-black origin-top rotate-[-5deg] group-hover:rotate-[15deg] transition-transform duration-300">
+                            PLAY<br>MORE
+                            <div class="absolute -top-4 left-1 w-[1.5px] h-4 bg-black rotate-12"></div>
+                            <div class="absolute -top-4 right-1 w-[1.5px] h-4 bg-black -rotate-12"></div>
+                        </div>
+                    </div>
+                    <div class="reveal-pop absolute top-20 -left-48 w-40 bg-white p-2 border border-black shadow-xl z-50 rotate-2">
+                        <img src="life3.jpg" class="w-full h-32 object-cover mb-2 border border-gray-200">
+                        <div class="text-[9px] font-mono uppercase text-center text-red-600 font-bold">Nature, animals & movement — endless inspiration for a healthy life</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PLAYFUL PROJECTS -->
+    <section class="w-full bg-[#fcfcfc] border-b border-black">
+        <div class="p-6 border-b border-black flex justify-between items-center">
+            <h2 class="text-xs font-mono uppercase">Selected Projects</h2>
+            <div class="text-[10px] font-mono text-gray-400 uppercase hidden sm:block">2024 — 2026</div>
+        </div>
+        <div class="p-6 lg:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-6">
+
+                <!-- Card 1: UX & Product -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-blue-600">
+                    <div class="relative w-full h-48 overflow-hidden bg-blue-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-cyan-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="16.jpg" alt="UX & Product" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">01</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-blue-900 transition-colors">City Builder - Barbie</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">The game centers around placing and arranging buildings within a stylized city, but the pixel Barbie aesthetic adds a unique layer of personality. It transforms a typical city builder into something more lighthearted and visually distinctive, where the experience is as much about atmosphere as it is about gameplay.</p>
+                        <a href="https://www.instagram.com/p/DXqhXlFjS6F/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2: Creative Code -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-pink-600">
+                    <div class="relative w-full h-48 overflow-hidden bg-pink-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-pink-100 to-rose-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute -left-8 -top-8 w-32 h-32 bg-pink-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="game2.png" alt="Creative Code" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">02</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-pink-900 transition-colors">Car Simulation</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">A car simulation game. The game allows users to navigate through a simulated environment, where driving becomes less about realism and more about exploring motion, control, and spatial awareness.</p>
+                        <a href="https://www.instagram.com/p/DXXPE_fiQt5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3: Motion & Play -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-green-600">
+                    <div class="relative w-full h-48 overflow-hidden bg-green-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-100 to-emerald-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-green-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="sparrow.png" alt="Motion & Play" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">03</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-green-900 transition-colors">Sparrow Urbanism</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Sparrow Urbanism is an interactive, hybrid, data-driven game. It collects processed, real-time, participatory data from the audience to create ecological relations between human, sparrows, and cities.</p>
+                        <a href="https://media.ed.ac.uk/media/t/1_tlpwuuvd" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-amber-500">
+                    <div class="relative w-full h-48 overflow-hidden bg-amber-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-100 to-yellow-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute right-0 bottom-0 w-32 h-32 bg-amber-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="game4.png" alt="Project 04" class="w-full h-full object-cover relative z-10">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">04</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-amber-800 transition-colors">Feline Oracle</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">An interactive digital tarot experience for cat lovers, combining hand gesture recognition, voice/text input, and a large language model to interpret cats' mysterious behaviors through cat-themed tarot symbolism.</p>
+                        <a href="https://www.instagram.com/p/DX0IIsGiYuf/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-purple-600">
+                    <div class="relative w-full h-48 overflow-hidden bg-purple-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-100 to-violet-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute left-0 top-0 w-32 h-32 bg-purple-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="fish-of-fortune.png" alt="Project 05" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">05</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-purple-900 transition-colors">Fish of Fortune</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Fish of Fortune is a playful, voice-controlled web game that transforms simple sound into an expressive underwater experience. Instead of using traditional controls, players guide a fishing hook through the ocean using their voice, like humming or whistling to move the hook vertically while steering horizontally with the mouse. Lower tones send the hook deeper into the sea, while higher pitches lift it toward the surface, creating a fluid and intuitive interaction between sound and motion.</p>
+                        <a href="https://zz11022-create.github.io/100days_of_making/Whistle-fishing-game/" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="group flex flex-col border border-black bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#111] hover:border-red-500">
+                    <div class="relative w-full h-48 overflow-hidden bg-red-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-red-100 to-orange-50 group-hover:scale-105 transition-transform duration-500"></div>
+                        <div class="absolute right-0 top-1/2 w-32 h-32 bg-red-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
+                        <img src="paws.png" alt="Project 06" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">06</div>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-red-900 transition-colors">Paws &amp; Progress</h3>
+                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Paws & Progress is a modern, interactive web platform designed to revolutionize the pet adoption experience. Moving away from traditional, static search filters, this project utilizes a "personality-first" matching algorithm to connect potential owners with real adoptable cats from local shelters across NYC and NJ.</p>
+                        <a href="https://paws-and-progress.onrender.com/final" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
+                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MARQUEE + FOOTER -->
+    <section class="w-full bg-white relative overflow-hidden h-[30vh] sm:h-[40vh] flex flex-col justify-between">
+
+        <div class="flex-grow flex items-center w-full px-6 whitespace-nowrap overflow-hidden relative group">
+            <div class="text-[12vw] font-black uppercase tracking-tighter leading-none flex items-center transition-transform duration-1000 ease-out">
+                DESIGN&nbsp;
+
+                <!-- Inline polaroid -->
+                <a href="https://www.instagram.com/p/DXlAAKmDUyb/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="mx-[2vw] relative inline-block w-[10vw] min-w-[100px] aspect-[3/4] bg-white border border-gray-200 p-2 pb-8 shadow-xl transform -rotate-6 group-hover:rotate-3 transition-transform duration-500 z-10 cursor-pointer overflow-hidden">
+                    <img src="game.png" alt="Game Project" class="w-full h-full object-cover filter grayscale hover:grayscale-0 hover:scale-110 transition-all duration-500">
+                    <div class="absolute bottom-2 left-0 w-full text-center text-[8px] font-mono uppercase font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                        View All
+                    </div>
+                </a>
+
+                <span class="text-outline">PLAY</span>
+            </div>
+        </div>
+
+        <footer class="w-full border-t border-black grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-[10px] font-mono uppercase tracking-tight" style="background:#c8c0ff;">
+            <div class="flex flex-col">
+                <span class="font-bold">Queena Zheng · 2026</span>
+                <span class="text-gray-500">Product Designer · NYU</span>
+            </div>
+            <div class="flex items-center justify-center md:border-l md:border-black/20">
+                <a href="index.html" class="hover:underline">← Back to Portfolio</a>
+            </div>
+            <div class="flex items-center justify-center md:border-l md:border-black/20">
+                <a href="index.html#home" class="hover:underline">Hire Me</a>
+            </div>
+            <div class="flex items-center justify-end md:border-l md:border-black/20 text-right">
+                <a href="https://github.com/zz11022-create" target="_blank" class="hover:underline">GitHub ↗</a>
+            </div>
+        </footer>
+    </section>
+
+    <script>
+    (function () {
+      window.addEventListener('load', function () {
+        var container = document.getElementById('polaroid-container');
+        if (!container) return;
+        var cards = container.querySelectorAll('.polaroid-card');
+        var active = null, ox = 0, oy = 0;
+
+        // Convert transform-based placement to left/top so we can drag freely
+        var cRect = container.getBoundingClientRect();
+        cards.forEach(function (card) {
+          var r = card.getBoundingClientRect();
+          card.style.left = (r.left - cRect.left) + 'px';
+          card.style.top  = (r.top  - cRect.top)  + 'px';
+          card.style.transform = 'rotate(' + card.dataset.rot + 'deg)';
+          card.style.cursor = 'grab';
+        });
+
+        cards.forEach(function (card) {
+          card.addEventListener('mousedown', function (e) {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            active = card;
+            var r = card.getBoundingClientRect();
+            ox = e.clientX - r.left;
+            oy = e.clientY - r.top;
+            card.style.transition = 'none';
+            card.style.zIndex = '100';
+            card.style.cursor = 'grabbing';
+            card.style.transform = 'rotate(' + card.dataset.rot + 'deg) scale(1.04)';
+          });
+        });
+
+        document.addEventListener('mousemove', function (e) {
+          if (!active) return;
+          var cR = container.getBoundingClientRect();
+          var x = e.clientX - cR.left - ox;
+          var y = e.clientY - cR.top  - oy;
+          x = Math.max(0, Math.min(x, cR.width  - active.offsetWidth));
+          y = Math.max(0, Math.min(y, cR.height - active.offsetHeight));
+          active.style.left = x + 'px';
+          active.style.top  = y + 'px';
+        });
+
+        document.addEventListener('mouseup', function () {
+          if (!active) return;
+          active.style.transform = 'rotate(' + active.dataset.rot + 'deg)';
+          active.style.transition = '';
+          active.style.zIndex = '';
+          active.style.cursor = 'grab';
+          active = null;
+        });
+      });
+    })();
+    </script>
+</body>
+</html>

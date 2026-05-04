@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Queena Zheng — Explore</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #000000;
+            --text-primary: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-cyan: #00ffff;
+            --accent-gold: #ffd700;
+            --ui-line: rgba(255, 255, 255, 0.2);
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+
+        body, html {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background-color: var(--bg);
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #webgl-container {
+            position: absolute; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1; cursor: crosshair;
+        }
+
+        #hud {
+            position: absolute; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            padding: 2rem;
+        }
+
+        .hud-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            line-height: 1.5;
+        }
+
+        .hud-top-left {
+            grid-column: 1; grid-row: 1;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+
+        .hud-top-right {
+            grid-column: 2; grid-row: 1;
+            text-align: right;
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 4px;
+        }
+
+        .hud-bottom-left {
+            grid-column: 1; grid-row: 3;
+            align-self: end;
+        }
+
+        .hud-bottom-right {
+            grid-column: 2; grid-row: 3;
+            align-self: end; text-align: right;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+
+        .blinking-dot {
+            display: inline-block;
+            width: 4px; height: 4px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 2s infinite;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            width: 180px;
+            border-bottom: 1px solid var(--ui-line);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .data-label { color: var(--text-muted); }
+
+        .progress-bar {
+            width: 180px; height: 1px;
+            background: var(--ui-line);
+            margin-top: 4px; position: relative;
+        }
+
+        .progress-fill {
+            position: absolute; top: 0; left: 0;
+            height: 100%;
+            background: var(--accent-gold);
+            width: 0%;
+            box-shadow: 0 0 5px var(--accent-gold);
+            transition: width 0.3s ease-out;
+        }
+
+        /* Mode nav — top center */
+        .hud-nav {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+            z-index: 20;
+        }
+        .hud-nav a {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 999px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .hud-nav a:hover { color: #fff; border-color: rgba(255,255,255,0.6); }
+        .hud-nav a.active {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0,255,255,0.3);
+        }
+
+        /* Project info panel */
+        #project-info {
+            position: absolute;
+            top: 50%; left: 5%;
+            transform: translateY(-50%);
+            z-index: 5;
+            pointer-events: none;
+            width: 400px;
+        }
+
+        .project-meta {
+            font-size: 9px;
+            color: var(--accent-cyan);
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            display: flex; align-items: center;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-meta::before {
+            content: '';
+            display: inline-block;
+            width: 20px; height: 1px;
+            background: var(--accent-cyan);
+            margin-right: 12px;
+        }
+
+        .project-title {
+            font-size: 3rem; font-weight: 400;
+            letter-spacing: -0.02em; line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+        }
+
+        .project-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.8; max-width: 80%;
+            letter-spacing: 0.05em;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+        }
+
+        .project-data-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1rem; margin-top: 2rem;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+        }
+
+        .data-item { border-left: 1px solid var(--ui-line); padding-left: 10px; }
+        .data-item span { display: block; }
+        .data-item .val { color: var(--text-primary); margin-top: 2px; }
+
+        .is-active .project-meta,
+        .is-active .project-title,
+        .is-active .project-desc,
+        .is-active .project-data-grid {
+            opacity: 1; transform: translateY(0);
+        }
+
+        #loader {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 10px; letter-spacing: 0.5em;
+            transition: opacity 1s ease;
+        }
+
+        /* ── Other Projects — Floating Nodes ── */
+        #other-projects {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 15;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #other-projects.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .op-node {
+            position: absolute;
+            left: var(--nx);
+            top: var(--ny);
+            text-decoration: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            will-change: transform;
+        }
+        .op-content { position: relative; z-index: 2; }
+
+        .op-tag {
+            display: block;
+            font-size: 8px;
+            color: var(--accent-cyan);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+            text-shadow: 0 0 14px rgba(0,255,255,0.6);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.7s ease 0s, transform 0.7s ease 0s;
+        }
+        .op-title {
+            display: block;
+            font-size: clamp(1.5rem, 2.4vw, 2.3rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 0.55rem;
+            text-shadow: 0 2px 24px rgba(0,0,0,0.95);
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.7s ease 0.08s, transform 0.7s ease 0.08s;
+        }
+        .op-desc {
+            display: block;
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            max-width: 200px;
+            line-height: 1.75;
+            text-shadow: 0 0 12px rgba(0,0,0,0.9);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.7s ease 0.18s, transform 0.7s ease 0.18s;
+        }
+
+        /* per-node stagger */
+        .op-node:nth-child(2) .op-tag  { transition-delay: 0.14s; }
+        .op-node:nth-child(2) .op-title { transition-delay: 0.22s; }
+        .op-node:nth-child(2) .op-desc  { transition-delay: 0.32s; }
+        .op-node:nth-child(3) .op-tag  { transition-delay: 0.28s; }
+        .op-node:nth-child(3) .op-title { transition-delay: 0.36s; }
+        .op-node:nth-child(3) .op-desc  { transition-delay: 0.46s; }
+        .op-node:nth-child(4) .op-tag  { transition-delay: 0.42s; }
+        .op-node:nth-child(4) .op-title { transition-delay: 0.50s; }
+        .op-node:nth-child(4) .op-desc  { transition-delay: 0.60s; }
+
+        #other-projects.visible .op-tag,
+        #other-projects.visible .op-title,
+        #other-projects.visible .op-desc {
+            opacity: 1; transform: translateY(0);
+        }
+
+        /* gold underline sweep on hover */
+        .op-title-inner {
+            position: relative;
+            display: inline-block;
+        }
+        .op-title-inner::after {
+            content: '';
+            position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent-gold);
+            box-shadow: 0 0 8px var(--accent-gold);
+            transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .op-node:hover .op-title-inner::after { width: 100%; }
+
+        /* image reveal via clip-path wipe */
+        .op-img-wrap {
+            position: absolute;
+            top: -8px;
+            width: 250px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+            transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .op-img-wrap.img-right {
+            left: calc(100% + 30px);
+            clip-path: inset(0 100% 0 0);
+        }
+        .op-img-wrap.img-left {
+            right: calc(100% + 30px);
+            clip-path: inset(0 0 0 100%);
+        }
+        .op-node:hover .op-img-wrap { clip-path: inset(0 0 0 0); }
+
+        .op-img-wrap img {
+            width: 100%; display: block;
+            filter: brightness(0.78) contrast(1.05);
+        }
+        /* corner bracket accent */
+        .op-img-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 14px; height: 14px;
+            border-top: 1px solid var(--accent-cyan);
+            border-left: 1px solid var(--accent-cyan);
+            z-index: 3;
+        }
+        .op-img-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 14px; height: 14px;
+            border-bottom: 1px solid var(--accent-cyan);
+            border-right: 1px solid var(--accent-cyan);
+            z-index: 3;
+        }
+
+        /* scroll hint */
+        .op-scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.7s;
+        }
+        #other-projects.visible .op-scroll-hint { opacity: 1; }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+</head>
+<body>
+
+    <div id="loader">ENTERING_DESIGN_SPACE...</div>
+
+    <div id="webgl-container"></div>
+
+    <nav class="hud-nav">
+        <a href="index.html#home">HIRE ME</a>
+        <a href="play-mode.html">PLAY</a>
+        <a href="#" class="active">EXPLORE</a>
+    </nav>
+
+    <div id="hud">
+        <div class="hud-top-left hud-text">
+            <div><span class="blinking-dot"></span>SYS.ONLINE</div>
+            <div style="color: var(--text-muted)">DESIGNER / QUEENA ZHENG</div>
+            <div id="z-coord">Z: 0.000</div>
+        </div>
+
+        <div class="hud-top-right hud-text">
+            <div class="data-row">
+                <span class="data-label">FPS</span>
+                <span id="fps-counter">60</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">PARTICLES</span>
+                <span>84,000</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">RENDER</span>
+                <span>WEBGL 2.0</span>
+            </div>
+        </div>
+
+        <div class="hud-bottom-left hud-text">
+            <div>[SCROLL] TRAVERSE SPACE</div>
+            <div style="color: var(--text-muted); margin-top: 4px;">[HOVER] DISTORT ENTITY</div>
+        </div>
+
+        <div class="hud-bottom-right hud-text">
+            <div class="data-row" style="border:none; margin:0;">
+                <span class="data-label">INDEX</span>
+                <span id="project-index">01 / 04</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="scroll-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-info">
+        <div class="project-meta">ENTITY_01</div>
+        <h1 class="project-title">Calm<br>Interaction</h1>
+        <p class="project-desc">I believe the most powerful interfaces are those that feel inevitable — quiet enough to disappear, intentional enough to be felt. Designing for calm means building systems that respect attention as the rarest resource.</p>
+        <div class="project-data-grid hud-text">
+            <div class="data-item">
+                <span class="data-label">APPROACH</span>
+                <span class="val">CALM DESIGN</span>
+            </div>
+            <div class="data-item">
+                <span class="data-label">FOCUS</span>
+                <span class="val">ATTENTION</span>
+            </div>
+            <div class="data-item">
+                <span class="data-label">SCOPE</span>
+                <span class="val">SYSTEMIC</span>
+            </div>
+            <div class="data-item">
+                <span class="data-label">STATUS</span>
+                <span class="val" style="color: var(--accent-gold)">EVOLVING</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Projects — Floating Nodes -->
+    <div id="other-projects">
+
+        <a class="op-node" href="https://zz11022-create.github.io/100days_of_making/FluidCare/" target="_blank"
+           data-depth="0.040" style="--nx: 7%; --ny: 16%;">
+            <div class="op-content">
+                <span class="op-tag">GENERATIVE ART · WEB CV</span>
+                <span class="op-title"><span class="op-title-inner">FluidCare</span></span>
+                <span class="op-desc">FluidCare™ is an immersive, web-based rehabilitation platform that bridges the gap between interactive generative art and neuromuscular physical therapy. By leveraging real-time computer vision and fluid dynamics, the system transforms repetitive corrective exercises into a mesmerizing sensory experience, fostering higher patient engagement and mental well-being during recovery.</span>
+            </div>
+            <div class="op-img-wrap img-right"><img src="fluidcare.png" alt="Soleluxe" /></div>
+        </a>
+
+        <a class="op-node" href="https://www.instagram.com/p/DXV1A3FDWvI/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank"
+           data-depth="0.022" style="--nx: 58%; --ny: 10%;">
+            <div class="op-content">
+                <span class="op-tag">P5.JS · INTERACTIVE</span>
+                <span class="op-title"><span class="op-title-inner">Player One</span></span>
+                <span class="op-desc">An interactive website using a model based on my own image, where the visual experience is directly controlled by user input. By moving a slider with the mouse, users can dynamically adjust the pixel size of the image, shifting it from a highly detailed representation to a more abstract, pixelated form.</span>
+            </div>
+            <div class="op-img-wrap img-left"><img src="game3.png" alt="Kindred Pathways" /></div>
+        </a>
+
+        <a class="op-node" href="https://editor.p5js.org/ZhaoquanZheng/full/EA4lqn6F4" target="_blank"
+           data-depth="0.048" style="--nx: 10%; --ny: 62%;">
+            <div class="op-content">
+                <span class="op-tag">AI · P5.JS · GEMINI</span>
+                <span class="op-title"><span class="op-title-inner">Signal Atlas</span></span>
+                <span class="op-desc">This project is an experimental AI-powered storytelling interface built with p5.js and Gemini. Users begin by entering a short sentence, and the system responds by generating both a new narrative fragment and a corresponding terminal-style visual scene.</span>
+            </div>
+            <div class="op-img-wrap img-right"><img src="leftover.png" alt="Aether" /></div>
+        </a>
+
+        <a class="op-node" href="https://www.instagram.com/p/DW5RnJjjVx8/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank"
+           data-depth="0.030" style="--nx: 60%; --ny: 57%;">
+            <div class="op-content">
+                <span class="op-tag">THREE.JS · 3D</span>
+                <span class="op-title"><span class="op-title-inner">Launchpad</span></span>
+                <span class="op-desc">An interactive website, including a 3D version of a launchpad. It not only translates functional logic clearly, but also captures a refined balance in aesthetics.</span>
+            </div>
+            <div class="op-img-wrap img-left"><img src="nopaws.png" alt="Material Loop" /></div>
+        </a>
+
+        <p class="op-scroll-hint">[SCROLL UP] Return to space</p>
+    </div>
+
+    <script>
+        const projects = [
+            {
+                meta: "ENTITY_01",
+                title: "Calm<br>Interaction",
+                desc: "I believe the most powerful interfaces are those that feel inevitable — quiet enough to disappear, intentional enough to be felt. Designing for calm means building systems that respect attention as the rarest resource.",
+                algo: "CALM DESIGN", seed: "ATTENTION", dim: "SYSTEMIC", status: "EVOLVING"
+            },
+            {
+                meta: "ENTITY_02",
+                title: "Motion<br>as Language",
+                desc: "Every transition is a sentence. The way an element arrives, pauses, and departs carries meaning that words cannot. Motion design is not decoration — it is the grammar of digital experience.",
+                algo: "TIME + SPACE", seed: "INTERACTION", dim: "4D", status: "FLOWING"
+            },
+            {
+                meta: "ENTITY_03",
+                title: "Research<br>as Empathy",
+                desc: "I do not design for users — I design with them. Behind every data point is a person navigating their own complexity. Research is the act of genuinely listening before you begin to speak through form.",
+                algo: "EMPATHY", seed: "UX RESEARCH", dim: "HUMAN SCALE", status: "LISTENING"
+            },
+            {
+                meta: "ENTITY_04",
+                title: "Systems<br>Thinking",
+                desc: "No design exists in isolation. A button press ripples into a flow, a flow into a habit, a habit into a life. I approach every problem as a node in a larger network — social, emotional, and technical.",
+                algo: "HOLISTIC", seed: "MULTI-SCALE", dim: "NETWORKED", status: "ACTIVE"
+            }
+        ];
+
+        const snoise3D = `
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i);
+                vec4 p = permute( permute( permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.5 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+        `;
+
+        const vertexShader = `
+            uniform float uTime;
+            uniform float uDistortion;
+            attribute vec3 color;
+            attribute float size;
+            varying vec3 vColor;
+            varying float vDistance;
+            ${snoise3D}
+            void main() {
+                vColor = color;
+                vec3 noisePos = vec3(position.x * 0.01 + uTime * 0.1, position.y * 0.01 + uTime * 0.1, position.z * 0.01);
+                float noiseVal = snoise(noisePos);
+                vec3 displacedPos = position;
+                displacedPos.x += sin(position.y * 0.05 + uTime) * (15.0 + uDistortion * 50.0) * noiseVal;
+                displacedPos.y += cos(position.z * 0.05 + uTime) * (15.0 + uDistortion * 50.0) * noiseVal;
+                displacedPos.z += sin(position.x * 0.05 + uTime) * (15.0 + uDistortion * 50.0) * noiseVal;
+                vec4 mvPosition = modelViewMatrix * vec4(displacedPos, 1.0);
+                gl_PointSize = size * (300.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+                vDistance = length(mvPosition.xyz);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform vec3 uColorBase;
+            uniform vec3 uColorGlow;
+            varying vec3 vColor;
+            varying float vDistance;
+            void main() {
+                vec2 xy = gl_PointCoord.xy - vec2(0.5);
+                float ll = length(xy);
+                if(ll > 0.5) discard;
+                float alpha = (0.5 - ll) * 2.0;
+                vec3 finalColor = mix(uColorBase, vColor, 0.7);
+                finalColor += uColorGlow * (1.0 - ll * 2.0);
+                float depthFade = smoothstep(2000.0, 0.0, vDistance);
+                gl_FragColor = vec4(finalColor, alpha * depthFade * 0.8);
+            }
+        `;
+
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.0005);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.z = 0;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x000000);
+        container.appendChild(renderer.domElement);
+
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight), 2.5, 0.8, 0.1
+        );
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        const entities = [];
+        const zSpacing = 2000;
+        const particleCount = 20000;
+
+        const palettes = [
+            [new THREE.Color('#ff4500'), new THREE.Color('#ffd700'), new THREE.Color('#8a2be2')],
+            [new THREE.Color('#00ffff'), new THREE.Color('#0055ff'), new THREE.Color('#ffffff')],
+            [new THREE.Color('#ff0055'), new THREE.Color('#ffaa00'), new THREE.Color('#2200ff')],
+            [new THREE.Color('#aaff00'), new THREE.Color('#00ffaa'), new THREE.Color('#003322')]
+        ];
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const hitBoxes = [];
+
+        function createEntity(index, zPos) {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const palette = palettes[index % palettes.length];
+
+            for (let i = 0; i < particleCount; i++) {
+                const u = Math.random(), v = Math.random();
+                const theta = u * 2.0 * Math.PI;
+                const phi = Math.acos(2.0 * v - 1.0);
+                const r = 200 + Math.sin(theta * 5) * 100 + Math.cos(phi * 5) * 100 + (Math.random() * 50);
+                positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+                const mixedColor = palette[0].clone().lerp(palette[1], Math.random());
+                if (Math.random() > 0.8) mixedColor.lerp(palette[2], 0.8);
+                colors[i * 3] = mixedColor.r;
+                colors[i * 3 + 1] = mixedColor.g;
+                colors[i * 3 + 2] = mixedColor.b;
+                sizes[i] = Math.random() * 2.5 + 0.5;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size',     new THREE.BufferAttribute(sizes, 1));
+
+            const material = new THREE.ShaderMaterial({
+                vertexShader, fragmentShader,
+                uniforms: {
+                    uTime:       { value: 0 },
+                    uDistortion: { value: 0.0 },
+                    uColorBase:  { value: new THREE.Color(0x050505) },
+                    uColorGlow:  { value: palette[0] }
+                },
+                blending: THREE.AdditiveBlending,
+                depthWrite: false, transparent: true
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            particles.position.z = zPos;
+            particles.rotation.x = Math.random() * Math.PI;
+            particles.rotation.y = Math.random() * Math.PI;
+            scene.add(particles);
+            entities.push({ mesh: particles, material, index, baseZ: zPos });
+
+            const hitBox = new THREE.Mesh(
+                new THREE.SphereGeometry(300, 16, 16),
+                new THREE.MeshBasicMaterial({ visible: false })
+            );
+            hitBox.position.z = zPos;
+            hitBox.userData = { entityIndex: index };
+            scene.add(hitBox);
+            hitBoxes.push(hitBox);
+        }
+
+        for (let i = 0; i < projects.length; i++) createEntity(i, -(i * zSpacing));
+
+        // Section 05 atmospheric particle field — colorful cloud at z=-7500
+        const s5Field = (function () {
+            const count = 14000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            const col = new Float32Array(count * 3);
+            const sz  = new Float32Array(count);
+
+            const palette05 = [
+                [1.0,  0.27, 0.0 ],  // orange
+                [1.0,  0.84, 0.0 ],  // gold
+                [0.0,  1.0,  1.0 ],  // cyan
+                [0.0,  0.33, 1.0 ],  // blue
+                [1.0,  0.0,  0.33],  // magenta-red
+                [0.53, 0.17, 0.89],  // violet
+                [0.67, 1.0,  0.0 ],  // lime
+                [1.0,  0.67, 0.0 ]   // amber
+            ];
+
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.sqrt(Math.random()) * 2200;
+                pos[i * 3]     = Math.cos(angle) * radius;
+                pos[i * 3 + 1] = (Math.random() - 0.5) * 1800;
+                pos[i * 3 + 2] = Math.sin(angle) * radius * 0.45;
+
+                const c = palette05[Math.floor(Math.random() * palette05.length)];
+                const bright = 0.35 + Math.random() * 0.65;
+                col[i * 3]     = c[0] * bright;
+                col[i * 3 + 1] = c[1] * bright;
+                col[i * 3 + 2] = c[2] * bright;
+
+                sz[i] = Math.random() * 2.2 + 0.4;
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+            geo.setAttribute('size',     new THREE.BufferAttribute(sz,  1));
+
+            const mat = new THREE.PointsMaterial({
+                vertexColors: true,
+                size: 2.2,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                fog: false,
+                sizeAttenuation: true
+            });
+
+            const mesh = new THREE.Points(geo, mat);
+            mesh.position.z = -7500;
+            mesh.visible = false;
+            scene.add(mesh);
+            return mesh;
+        })();
+
+        // Background stars
+        const bgGeo = new THREE.BufferGeometry();
+        const bgCount = 5000;
+        const bgPos = new Float32Array(bgCount * 3);
+        for (let i = 0; i < bgCount * 3; i += 3) {
+            bgPos[i]     = (Math.random() - 0.5) * 4000;
+            bgPos[i + 1] = (Math.random() - 0.5) * 4000;
+            bgPos[i + 2] = (Math.random() - 1.5) * 8000;
+        }
+        bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+        scene.add(new THREE.Points(bgGeo, new THREE.PointsMaterial({
+            color: 0x444455, size: 1.5, transparent: true, opacity: 0.4,
+            blending: THREE.AdditiveBlending
+        })));
+
+        let targetZ = 0, currentZ = 0;
+        const maxScrollZ = -((projects.length - 1) * zSpacing);
+
+        const opNodes = Array.from(document.querySelectorAll('.op-node'));
+        const opLX = opNodes.map(() => 0), opLY = opNodes.map(() => 0);
+
+        window.addEventListener('wheel', (e) => {
+            targetZ -= e.deltaY * 2.5;
+            if (targetZ > 500) targetZ = 500;
+            if (targetZ < maxScrollZ - 2500) targetZ = maxScrollZ - 2500;
+        });
+
+        let mouseX = 0, mouseY = 0, targetParallaxX = 0, targetParallaxY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouseX = e.clientX - window.innerWidth / 2;
+            mouseY = e.clientY - window.innerHeight / 2;
+        });
+
+        window.addEventListener('click', () => {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(hitBoxes);
+            if (intersects.length > 0) {
+                targetZ = -(intersects[0].object.userData.entityIndex * zSpacing) + 200;
+            } else {
+                targetZ -= 500;
+            }
+        });
+
+        const projectInfoDOM   = document.getElementById('project-info');
+        const metaDOM          = document.querySelector('.project-meta');
+        const titleDOM         = document.querySelector('.project-title');
+        const descDOM          = document.querySelector('.project-desc');
+        const zCoordDOM        = document.getElementById('z-coord');
+        const indexDOM         = document.getElementById('project-index');
+        const scrollFillDOM    = document.getElementById('scroll-progress');
+        const dataGridDOM      = document.querySelector('.project-data-grid');
+        const otherProjectsDOM = document.getElementById('other-projects');
+
+        let activeIndex = -1;
+        const otherProjectsThreshold = maxScrollZ - 500; // -6500
+
+        function updateUI(z) {
+            zCoordDOM.innerText = `Z: ${Math.abs(Math.round(z)).toString().padStart(5, '0')}`;
+            const totalRange = Math.abs(maxScrollZ) + 500;
+            let progress = Math.max(0, Math.min(100, (Math.abs(z) / totalRange) * 100));
+            scrollFillDOM.style.width = `${progress}%`;
+
+            // Show other-projects overlay when scrolled past last entity
+            if (z < otherProjectsThreshold) {
+                otherProjectsDOM.classList.add('visible');
+                s5Field.visible = true;
+                indexDOM.innerText = `05 / 05`;
+                if (activeIndex !== -1) {
+                    projectInfoDOM.classList.remove('is-active');
+                    activeIndex = -1;
+                }
+                return;
+            } else {
+                otherProjectsDOM.classList.remove('visible');
+                s5Field.visible = false;
+            }
+
+            let closestIndex = 0, minDistance = Infinity;
+            for (let i = 0; i < projects.length; i++) {
+                const dist = Math.abs(z - (-(i * zSpacing)));
+                if (dist < minDistance) { minDistance = dist; closestIndex = i; }
+            }
+
+            if (minDistance < 600) {
+                if (activeIndex !== closestIndex) {
+                    activeIndex = closestIndex;
+                    projectInfoDOM.classList.remove('is-active');
+                    setTimeout(() => {
+                        const data = projects[activeIndex];
+                        metaDOM.innerText   = data.meta;
+                        titleDOM.innerHTML  = data.title;
+                        descDOM.innerText   = data.desc;
+                        indexDOM.innerText  = `0${activeIndex + 1} / 0${projects.length + 1}`;
+                        dataGridDOM.innerHTML = `
+                            <div class="data-item"><span class="data-label">APPROACH</span><span class="val">${data.algo}</span></div>
+                            <div class="data-item"><span class="data-label">FOCUS</span><span class="val">${data.seed}</span></div>
+                            <div class="data-item"><span class="data-label">DIMENSION</span><span class="val">${data.dim}</span></div>
+                            <div class="data-item"><span class="data-label">STATUS</span><span class="val" style="color:var(--accent-gold)">${data.status}</span></div>
+                        `;
+                        projectInfoDOM.classList.add('is-active');
+                    }, 400);
+                }
+            } else {
+                if (activeIndex !== -1) { projectInfoDOM.classList.remove('is-active'); activeIndex = -1; }
+            }
+        }
+
+        const clock = new THREE.Clock();
+        let frames = 0, prevTime = performance.now();
+        const fpsCounter = document.getElementById('fps-counter');
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+            clock.getDelta();
+
+            currentZ += (targetZ - currentZ) * 0.05;
+            targetParallaxX = mouseX * 0.1;
+            targetParallaxY = mouseY * 0.1;
+            camera.position.x += (targetParallaxX - camera.position.x) * 0.05;
+            camera.position.y += (-targetParallaxY - camera.position.y) * 0.05;
+            camera.position.z = currentZ;
+
+            // Lerp-parallax for floating project nodes
+            if (otherProjectsDOM.classList.contains('visible')) {
+                opNodes.forEach((node, i) => {
+                    const d = parseFloat(node.dataset.depth);
+                    opLX[i] += (mouseX * d - opLX[i]) * 0.06;
+                    opLY[i] += (mouseY * d - opLY[i]) * 0.06;
+                    node.style.transform = `translate(${opLX[i]}px, ${opLY[i]}px)`;
+                });
+            }
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(hitBoxes);
+
+            entities.forEach(ent => {
+                ent.material.uniforms.uDistortion.value += (0.0 - ent.material.uniforms.uDistortion.value) * 0.1;
+                ent.material.uniforms.uTime.value = elapsedTime;
+                ent.mesh.rotation.y += 0.001;
+                ent.mesh.rotation.x += 0.0005;
+            });
+
+            // Slow drift of Section 05 atmosphere
+            s5Field.rotation.y += 0.00035;
+            s5Field.rotation.z += 0.00012;
+            s5Field.rotation.x = Math.sin(elapsedTime * 0.08) * 0.06;
+
+            if (intersects.length > 0) {
+                const hoveredEntity = entities.find(e => e.index === intersects[0].object.userData.entityIndex);
+                if (hoveredEntity) hoveredEntity.material.uniforms.uDistortion.value += (1.0 - hoveredEntity.material.uniforms.uDistortion.value) * 0.1;
+            }
+
+            updateUI(currentZ);
+            composer.render();
+
+            frames++;
+            const time = performance.now();
+            if (time >= prevTime + 1000) {
+                fpsCounter.innerText = Math.round((frames * 1000) / (time - prevTime));
+                frames = 0; prevTime = time;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 1000);
+                updateUI(0);
+                animate();
+            }, 1500);
+        };
+    </script>
+
+</body>
+</html>

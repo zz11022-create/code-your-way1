@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Inter:wght@400;500;900&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
   --bg: #f4f7fb;
@@ -295,8 +295,13 @@ body {
 }
 
 .nav-link:hover::after,
-.inline-link:hover::after {
+.inline-link:hover::after,
+.nav-link.is-active::after {
   transform: scaleX(1);
+}
+
+.nav-link.is-active {
+  color: var(--text);
 }
 
 .pill {
@@ -330,6 +335,7 @@ body {
 .pill-secondary {
   background: rgba(255, 255, 255, 0.32);
 }
+
 
 /* -------- TYPOGRAPHY -------- */
 
@@ -1272,3 +1278,4 @@ p {
     display: none !important;
   }
 }
+
