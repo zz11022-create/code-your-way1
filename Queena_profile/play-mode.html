@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Queena Zheng — Play</title>
+    <meta name="description" content="Playful experiments by Queena Zheng: creative games, gesture and voice interfaces, tangible ecology, and interactive product prototypes.">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -51,6 +52,11 @@
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
+        #play-projects { scroll-margin-top: 80px; }
+        a:focus-visible { outline: 3px solid #5e43ba; outline-offset: 5px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col selection:bg-yellow-300 selection:text-black">
@@ -68,7 +74,7 @@
 
         <nav class="hidden md:flex items-center gap-2 text-[11px] font-mono uppercase tracking-wide">
             <a href="index.html#home" class="px-5 py-2 rounded-full border border-black hover:bg-black hover:text-white transition-colors">Hire Me</a>
-            <a href="#" class="px-5 py-2 rounded-full border border-black bg-black text-white">Play</a>
+            <a href="play-mode.html" aria-current="page" class="px-5 py-2 rounded-full border border-black bg-black text-white">Play</a>
             <a href="explore-mode.html" class="px-5 py-2 rounded-full border border-black hover:bg-black hover:text-white transition-colors">Explore</a>
         </nav>
 
@@ -330,12 +336,13 @@
     </section>
 
     <!-- PLAYFUL PROJECTS -->
-    <section class="w-full bg-[#fcfcfc] border-b border-black">
+    <section id="play-projects" aria-labelledby="play-projects-title" class="w-full bg-[#fcfcfc] border-b border-black">
         <div class="p-6 border-b border-black flex justify-between items-center">
-            <h2 class="text-xs font-mono uppercase">Selected Projects</h2>
+            <h2 id="play-projects-title" class="text-xs font-mono uppercase">Experiments in Play</h2>
             <div class="text-[10px] font-mono text-gray-400 uppercase hidden sm:block">2024 — 2026</div>
         </div>
         <div class="p-6 lg:p-12">
+            <p class="max-w-2xl text-sm text-gray-700 leading-relaxed mb-8">Games, tangible systems, and playful interfaces. Each experiment explores a different way to move, make, or connect.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-6">
 
                 <!-- Card 1: UX & Product -->
@@ -343,15 +350,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-blue-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-cyan-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="16.jpg" alt="UX & Product" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <img src="16.jpg" alt="City Builder — Barbie project preview" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">01</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
-                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-blue-900 transition-colors">City Builder - Barbie</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">The game centers around placing and arranging buildings within a stylized city, but the pixel Barbie aesthetic adds a unique layer of personality. It transforms a typical city builder into something more lighthearted and visually distinctive, where the experience is as much about atmosphere as it is about gameplay.</p>
-                        <a href="https://www.instagram.com/p/DXqhXlFjS6F/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-blue-900 transition-colors">City Builder — Barbie</h3>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">World building · Spatial play</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A Barbie-inspired city builder that turns urban planning into a playful composition. Arrange buildings and public spaces in a pink, isometric world, exploring how placement, scale, and visual identity shape the character of a city.</p>
+                        <div class="flex flex-wrap gap-2"><a href="https://www.instagram.com/p/DXqhXlFjS6F/" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Watch demo <span aria-hidden="true">↗</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Video demo · Instagram may require sign-in.</p>
                     </div>
                 </div>
 
@@ -360,15 +367,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-pink-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-pink-100 to-rose-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute -left-8 -top-8 w-32 h-32 bg-pink-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="game2.png" alt="Creative Code" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <img src="game2.png" alt="Car Simulation project preview" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">02</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
                         <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-pink-900 transition-colors">Car Simulation</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">A car simulation game. The game allows users to navigate through a simulated environment, where driving becomes less about realism and more about exploring motion, control, and spatial awareness.</p>
-                        <a href="https://www.instagram.com/p/DXXPE_fiQt5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">Game feel · 3D interaction</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A playful driving sandbox set in a low-poly landscape. Keyboard steering, boosts, and jumps turn a simple vehicle into a way to explore momentum and spatial control. The experiment focuses on responsive controls and the expressive feel of movement.</p>
+                        <div class="flex flex-wrap gap-2"><a href="https://www.instagram.com/p/DXXPE_fiQt5/" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Watch demo <span aria-hidden="true">↗</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Video demo · Instagram may require sign-in.</p>
                     </div>
                 </div>
 
@@ -377,15 +384,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-green-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-green-100 to-emerald-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-green-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="sparrow.png" alt="Motion & Play" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <img src="sparrow.png" alt="Sparrow Urbanism project preview" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">03</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
                         <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-green-900 transition-colors">Sparrow Urbanism</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Sparrow Urbanism is an interactive, hybrid, data-driven game. It collects processed, real-time, participatory data from the audience to create ecological relations between human, sparrows, and cities.</p>
-                        <a href="https://media.ed.ac.uk/media/t/1_tlpwuuvd" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">Tangible play · Urban ecology</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A hybrid ecological game where physical city blocks and sensor input shape a real-time bird simulation. Participants change an urban landscape and observe how sparrows respond, making relationships between human decisions and more-than-human habitats visible through play.</p>
+                        <div class="flex flex-wrap gap-2"><a href="https://media.ed.ac.uk/media/t/1_tlpwuuvd" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Watch installation film <span aria-hidden="true">↗</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Physical installation · Film hosted by the University of Edinburgh.</p>
                     </div>
                 </div>
 
@@ -394,15 +401,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-amber-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-amber-100 to-yellow-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute right-0 bottom-0 w-32 h-32 bg-amber-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="game4.png" alt="Project 04" class="w-full h-full object-cover relative z-10">
+                        <img src="game4.png" alt="Feline Oracle project preview" class="w-full h-full object-cover relative z-10">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">04</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
                         <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-amber-800 transition-colors">Feline Oracle</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">An interactive digital tarot experience for cat lovers, combining hand gesture recognition, voice/text input, and a large language model to interpret cats' mysterious behaviors through cat-themed tarot symbolism.</p>
-                        <a href="https://www.instagram.com/p/DX0IIsGiYuf/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">Gesture interaction · Digital ritual</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A cat-themed tarot ritual that begins with a question and unfolds through shuffling, drawing, and interpretation. Hand gestures bring physical participation to the screen, while mouse and text controls offer another way in. The portfolio demo uses clearly labeled preset readings.</p>
+                        <div class="flex flex-wrap gap-2"><a href="prototypes/feline-oracle/" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Try interactive demo <span aria-hidden="true">→</span></a><a href="projects/feline-oracle.html" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Read project <span aria-hidden="true">→</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Camera and voice are optional · Preset readings, not live AI.</p>
                     </div>
                 </div>
 
@@ -411,15 +418,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-purple-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-purple-100 to-violet-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute left-0 top-0 w-32 h-32 bg-purple-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="fish-of-fortune.png" alt="Project 05" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <img src="fish-of-fortune.png" alt="Fish of Fortune project preview" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">05</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
                         <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-purple-900 transition-colors">Fish of Fortune</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Fish of Fortune is a playful, voice-controlled web game that transforms simple sound into an expressive underwater experience. Instead of using traditional controls, players guide a fishing hook through the ocean using their voice, like humming or whistling to move the hook vertically while steering horizontally with the mouse. Lower tones send the hook deeper into the sea, while higher pitches lift it toward the surface, creating a fluid and intuitive interaction between sound and motion.</p>
-                        <a href="https://zz11022-create.github.io/100days_of_making/Whistle-fishing-game/" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">Voice input · Creative coding</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A voice-controlled fishing game that turns pitch into movement. Hum or whistle low to send the hook deeper, raise your pitch to bring it toward the surface, and steer left or right with the mouse. Sound becomes a playful way to navigate an underwater world.</p>
+                        <div class="flex flex-wrap gap-2"><a href="https://zz11022-create.github.io/100days_of_making/Whistle-fishing-game/" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Play browser game <span aria-hidden="true">↗</span></a><a href="https://github.com/zz11022-create/100days_of_making/tree/main/Whistle-fishing-game" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">View code <span aria-hidden="true">↗</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Microphone required · Desktop browser recommended.</p>
                     </div>
                 </div>
 
@@ -428,15 +435,15 @@
                     <div class="relative w-full h-48 overflow-hidden bg-red-50">
                         <div class="absolute inset-0 bg-gradient-to-br from-red-100 to-orange-50 group-hover:scale-105 transition-transform duration-500"></div>
                         <div class="absolute right-0 top-1/2 w-32 h-32 bg-red-400 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                        <img src="paws.png" alt="Project 06" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
+                        <img src="paws.png" alt="Paws &amp; Progress project preview" class="w-full h-full object-cover relative z-10 mix-blend-multiply">
                         <div class="absolute top-3 left-3 text-[9px] font-mono uppercase bg-white border border-black px-2 py-0.5 z-20">06</div>
                     </div>
                     <div class="p-5 flex flex-col gap-3 flex-grow border-t border-black">
                         <h3 class="text-lg font-black uppercase tracking-tight group-hover:text-red-900 transition-colors">Paws &amp; Progress</h3>
-                        <p class="text-[11px] font-mono text-gray-500 leading-relaxed flex-grow">Paws & Progress is a modern, interactive web platform designed to revolutionize the pet adoption experience. Moving away from traditional, static search filters, this project utilizes a "personality-first" matching algorithm to connect potential owners with real adoptable cats from local shelters across NYC and NJ.</p>
-                        <a href="https://paws-and-progress.onrender.com/final" target="_blank" class="text-[10px] font-mono uppercase border border-black px-3 py-1.5 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">
-                            View Project <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-                        </a>
+                        <p class="text-[10px] font-mono uppercase tracking-wide text-gray-600">Playful onboarding · Product prototype</p>
+                        <p class="text-[13px] text-gray-700 leading-relaxed flex-grow">A cat adoption prototype that starts with everyday preferences, then invites people to try short care scenarios. Preference sliders and a rule-based compatibility score make the matching process interactive, while the scenarios encourage reflection on the responsibilities of living with a cat.</p>
+                        <div class="flex flex-wrap gap-2"><a href="https://paws-and-progress.onrender.com/final" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">Explore web prototype <span aria-hidden="true">↗</span></a><a href="https://github.com/zz11022-create/100days_of_making/tree/main/paws-and-progress" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono uppercase border border-black px-3 py-2 inline-flex items-center gap-1 self-start hover:bg-black hover:text-white transition-colors">View code <span aria-hidden="true">↗</span></a></div>
+                        <p class="text-[11px] font-mono text-gray-600 leading-relaxed">Prototype · Sample cats when live data is unavailable · May take time to wake up.</p>
                     </div>
                 </div>
 
@@ -453,10 +460,10 @@
                 DESIGN&nbsp;
 
                 <!-- Inline polaroid -->
-                <a href="https://www.instagram.com/p/DXlAAKmDUyb/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="mx-[2vw] relative inline-block w-[10vw] min-w-[100px] aspect-[3/4] bg-white border border-gray-200 p-2 pb-8 shadow-xl transform -rotate-6 group-hover:rotate-3 transition-transform duration-500 z-10 cursor-pointer overflow-hidden">
+                <a href="#play-projects" aria-label="Browse all six Play projects" target="_blank" rel="noopener noreferrer" class="mx-[2vw] relative inline-block w-[10vw] min-w-[100px] aspect-[3/4] bg-white border border-gray-200 p-2 pb-8 shadow-xl transform -rotate-6 group-hover:rotate-3 transition-transform duration-500 z-10 cursor-pointer overflow-hidden">
                     <img src="game.png" alt="Game Project" class="w-full h-full object-cover filter grayscale hover:grayscale-0 hover:scale-110 transition-all duration-500">
                     <div class="absolute bottom-2 left-0 w-full text-center text-[8px] font-mono uppercase font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                        View All
+                        All projects
                     </div>
                 </a>
 
@@ -476,7 +483,7 @@
                 <a href="index.html#home" class="hover:underline">Hire Me</a>
             </div>
             <div class="flex items-center justify-end md:border-l md:border-black/20 text-right">
-                <a href="https://github.com/zz11022-create" target="_blank" class="hover:underline">GitHub ↗</a>
+                <a href="https://github.com/zz11022-create" target="_blank" rel="noopener noreferrer" class="hover:underline">GitHub ↗</a>
             </div>
         </footer>
     </section>
